@@ -1,0 +1,1251 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Bước 1: Thông tin Cơ bản - i-LogiCare Mobile</title>
+    <link rel="icon" type="image/png" href="../images/car.png">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Remix Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.7.0/fonts/remixicon.css" rel="stylesheet">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Supabase JS Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <style>
+        :root {
+            --primary: #5AAF4B;
+            --primary-dark: #4a9c3d;
+            --primary-light: #7bc36e;
+            --secondary: #202D4A;
+            --accent: #FFC107;
+            --neutral-light: #F3F4F6;
+            --white: #FFFFFF;
+            --danger: #d0011b;
+            --success: #10B981;
+            --border-color: #E5E7EB;
+            --text-primary: #1F2937;
+            --text-secondary: #6B7280;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--neutral-light);
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+
+        /* Mobile Header */
+        .mobile-header {
+            background: var(--white);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            padding: 8px;
+            color: var(--primary);
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .header-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            flex: 1;
+            text-align: center;
+            margin: 0 8px;
+        }
+
+        .help-btn {
+            background: none;
+            border: none;
+            padding: 8px;
+            color: var(--text-secondary);
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            background: var(--white);
+            padding: 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .step-text {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .step-count {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .progress-bar-wrapper {
+            background: #E5E7EB;
+            height: 6px;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: var(--primary);
+            height: 100%;
+            width: 25%;
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 20px 16px 100px;
+        }
+
+        .section {
+            background: var(--white);
+            border-radius: 12px;
+            margin-bottom: 16px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .section-header {
+            padding: 16px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: var(--white);
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-content {
+            padding: 20px 16px;
+        }
+
+        /* Business Type Selection */
+        .business-type-grid {
+            display: grid;
+            gap: 12px;
+        }
+
+        .business-type-card {
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: var(--white);
+        }
+
+        .business-type-card:hover {
+            border-color: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(90, 175, 75, 0.15);
+        }
+
+        .business-type-card.active {
+            border-color: var(--primary);
+            background: linear-gradient(135deg, rgba(90, 175, 75, 0.05) 0%, rgba(90, 175, 75, 0.02) 100%);
+        }
+
+        .business-type-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .business-type-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--primary-light);
+            color: var(--white);
+            font-size: 18px;
+        }
+
+        .business-type-active .business-type-icon {
+            background: var(--primary);
+        }
+
+        .business-type-info h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin: 0;
+            color: var(--text-primary);
+        }
+
+        .business-type-info p {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        .business-type-requirements {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .requirements-title {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+
+        .requirements-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+
+        .requirement-tag {
+            background: var(--neutral-light);
+            color: var(--text-secondary);
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            border: 1px solid var(--border-color);
+        }
+
+        .business-type-card.active .requirement-tag {
+            background: rgba(90, 175, 75, 0.1);
+            color: var(--primary-dark);
+            border-color: var(--primary-light);
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+        }
+
+        .form-label.required::after {
+            content: " *";
+            color: var(--danger);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 16px;
+            background: var(--white);
+            transition: border-color 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(90, 175, 75, 0.1);
+        }
+
+        .form-control.error {
+            border-color: var(--danger);
+        }
+
+        .form-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2'><polyline points='6,9 12,15 18,9'></polyline></svg>");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 20px;
+            padding-right: 40px;
+        }
+
+        .form-hint {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        /* Suggestion links styling */
+        .suggestion-link {
+            color: var(--primary);
+            cursor: pointer;
+            text-decoration: underline;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+
+        .suggestion-link:hover {
+            color: var(--primary-dark);
+            text-decoration: none;
+        }
+
+        .suggestion-link:not(:last-child)::after {
+            content: ", ";
+            color: var(--text-secondary);
+            text-decoration: none;
+        }
+
+        .form-error {
+            font-size: 12px;
+            color: var(--danger);
+            margin-top: 4px;
+            display: none;
+        }
+
+        .form-error.show {
+            display: block;
+        }
+
+        .tooltip-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--text-secondary);
+            color: var(--white);
+            font-size: 10px;
+            margin-left: 4px;
+            cursor: help;
+            position: relative;
+        }
+
+        .tooltip-icon:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--text-primary);
+            color: var(--white);
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 11px;
+            white-space: nowrap;
+            z-index: 1000;
+            max-width: 200px;
+            white-space: normal;
+            word-wrap: break-word;
+        }
+
+        /* Business Only Fields */
+        .business-only {
+            display: none;
+        }
+
+        .business-only.show {
+            display: block;
+        }
+
+        /* Success Notification */
+        .success-notification {
+            background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+            color: var(--white);
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            display: none;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .success-notification.show {
+            display: flex;
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--white);
+            border-top: 1px solid var(--border-color);
+            padding: 16px;
+            z-index: 100;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 14px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Loading State */
+        .loading {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .loading.show {
+            display: flex;
+        }
+
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid transparent;
+            border-top: 2px solid currentColor;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Auto-hide Success Message */
+        .success-notification {
+            animation: slideInUp 0.3s ease-out;
+        }
+
+        @keyframes slideInUp {
+            from {
+                transform: translateY(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Auto-filled field animation */
+        .form-control.auto-filled {
+            animation: autoFillGlow 0.8s ease-out;
+        }
+
+        @keyframes autoFillGlow {
+            0% {
+                background-color: rgba(90, 175, 75, 0.1);
+                border-color: var(--primary-light);
+            }
+            100% {
+                background-color: var(--white);
+                border-color: var(--border-color);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Mobile Header -->
+    <div class="mobile-header">
+        <div class="header-content">
+            <button class="back-btn" id="backBtn">
+                <i class="ri-arrow-left-line"></i>
+            </button>
+            <h1 class="header-title">Đăng ký Người bán</h1>
+        </div>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="progress-container">
+        <div class="progress-info">
+            <span class="step-text">Thông tin Cơ bản</span>
+            <span class="step-count">Bước 1/4</span>
+        </div>
+        <div class="progress-bar-wrapper">
+            <div class="progress-fill"></div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Auto-fill Success Notification -->
+        <div class="success-notification" id="autoFillNotification">
+            <i class="ri-check-circle-line"></i>
+            <span>Thông tin cá nhân đã được tự động điền từ tài khoản của bạn.</span>
+        </div>
+
+        <!-- Business Type Selection -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="ri-building-line"></i>
+                    Chọn loại hình kinh doanh
+                </h2>
+            </div>
+            <div class="section-content">
+                <div class="business-type-grid">
+                    <div class="business-type-card" data-type="individual">
+                        <div class="business-type-header">
+                            <div class="business-type-icon">
+                                <i class="ri-user-line"></i>
+                            </div>
+                            <div class="business-type-info">
+                                <h3>Cá nhân</h3>
+                                <p>Người bán cá nhân, không đăng ký kinh doanh</p>
+                            </div>
+                        </div>
+                        <div class="business-type-requirements">
+                            <div class="requirements-title">Giấy tờ cần thiết:</div>
+                            <div class="requirements-list">
+                                <span class="requirement-tag">CMND/CCCD</span>
+                                <span class="requirement-tag">Tài khoản ngân hàng</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="business-type-card" data-type="household">
+                        <div class="business-type-header">
+                            <div class="business-type-icon">
+                                <i class="ri-home-line"></i>
+                            </div>
+                            <div class="business-type-info">
+                                <h3>Hộ Kinh Doanh</h3>
+                                <p>Hộ kinh doanh có đăng ký kinh doanh</p>
+                            </div>
+                        </div>
+                        <div class="business-type-requirements">
+                            <div class="requirements-title">Giấy tờ cần thiết:</div>
+                            <div class="requirements-list">
+                                <span class="requirement-tag">Giấy phép kinh doanh</span>
+                                <span class="requirement-tag">CMND/CCCD chủ hộ</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="business-type-card" data-type="company">
+                        <div class="business-type-header">
+                            <div class="business-type-icon">
+                                <i class="ri-building-2-line"></i>
+                            </div>
+                            <div class="business-type-info">
+                                <h3>Doanh Nghiệp</h3>
+                                <p>Công ty, doanh nghiệp có đăng ký kinh doanh</p>
+                            </div>
+                        </div>
+                        <div class="business-type-requirements">
+                            <div class="requirements-title">Giấy tờ cần thiết:</div>
+                            <div class="requirements-list">
+                                <span class="requirement-tag">Giấy phép kinh doanh</span>
+                                <span class="requirement-tag">Mã số thuế</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="business-type-card" data-type="official">
+                        <div class="business-type-header">
+                            <div class="business-type-icon">
+                                <i class="ri-medal-line"></i>
+                            </div>
+                            <div class="business-type-info">
+                                <h3>Official Store</h3>
+                                <p>Thương hiệu chính hãng, có giấy ủy quyền</p>
+                            </div>
+                        </div>
+                        <div class="business-type-requirements">
+                            <div class="requirements-title">Giấy tờ cần thiết:</div>
+                            <div class="requirements-list">
+                                <span class="requirement-tag">Giấy phép kinh doanh</span>
+                                <span class="requirement-tag">Giấy ủy quyền thương hiệu</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Basic Information Form -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="ri-user-line"></i>
+                    Thông tin cơ bản
+                </h2>
+            </div>
+            <div class="section-content">
+                <form id="basicInfoForm">
+                    <div class="form-group">
+                        <label for="fullName" class="form-label required">Họ và tên</label>
+                        <input type="text" id="fullName" class="form-control" placeholder="Nhập họ và tên của bạn">
+                        <div class="form-error">Vui lòng nhập họ và tên</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone" class="form-label required">Số điện thoại</label>
+                        <input type="tel" id="phone" class="form-control" placeholder="Nhập số điện thoại">
+                        <div class="form-error">Vui lòng nhập số điện thoại hợp lệ</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email" class="form-label required">Email</label>
+                        <input type="email" id="email" class="form-control" placeholder="Nhập email của bạn">
+                        <div class="form-error">Vui lòng nhập email hợp lệ</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="shopName" class="form-label required">
+                            Tên gian hàng
+                            <span class="tooltip-icon" data-tooltip="Tên gian hàng sẽ hiển thị cho khách hàng và không thể thay đổi sau khi đăng ký">
+                                <i class="ri-information-line"></i>
+                            </span>
+                        </label>
+                        <input type="text" id="shopName" class="form-control" placeholder="Nhập tên gian hàng">
+                        <div class="form-hint">Gợi ý: Shop_NguyenVanA, NguyenA_Logistics, A_Shop</div>
+                        <div class="form-error">Tên gian hàng đã tồn tại hoặc không hợp lệ</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="category" class="form-label required">
+                            Ngành hàng chính
+                            <span class="tooltip-icon" data-tooltip="Chọn ngành hàng phù hợp với loại sản phẩm chính bạn sẽ bán">
+                                <i class="ri-information-line"></i>
+                            </span>
+                        </label>
+                        <select id="category" class="form-control form-select">
+                            <option value="">Chọn ngành hàng</option>
+                            <option value="logistics">Logistics & Vận tải</option>
+                            <option value="parts">Phụ tùng & Linh kiện</option>
+                            <option value="services">Dịch vụ bảo dưỡng</option>
+                            <option value="tools">Dụng cụ & Thiết bị</option>
+                            <option value="other">Khác</option>
+                        </select>
+                        <div class="form-error">Vui lòng chọn ngành hàng</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="taxCode" class="form-label required">
+                            Mã số thuế
+                            <span class="tooltip-icon" data-tooltip="Đối với cá nhân: số CMND/CCCD hoặc mã số thuế cá nhân. Đối với doanh nghiệp: mã số thuế doanh nghiệp">
+                                <i class="ri-information-line"></i>
+                            </span>
+                        </label>
+                        <input type="text" id="taxCode" class="form-control" placeholder="Nhập mã số thuế hoặc số CMND/CCCD">
+                        <div class="form-error">Vui lòng nhập mã số thuế hợp lệ</div>
+                    </div>
+
+                    <!-- Business Only Fields -->
+                    <div class="business-only" id="businessOnlyFields">
+                        <div class="form-group">
+                            <label for="companyName" class="form-label required">
+                                Tên công ty
+                                <span class="tooltip-icon" data-tooltip="Tên công ty theo giấy phép đăng ký kinh doanh">
+                                    <i class="ri-information-line"></i>
+                                </span>
+                            </label>
+                            <input type="text" id="companyName" class="form-control" placeholder="Nhập tên công ty">
+                            <div class="form-error">Vui lòng nhập tên công ty</div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+        <div class="nav-buttons">
+            <button class="btn btn-outline" id="saveDraftBtn">
+                <i class="ri-save-line"></i>
+                Lưu nháp
+            </button>
+            <button class="btn btn-primary" id="nextBtn">
+                <div class="loading" id="nextBtnLoading">
+                    <div class="spinner"></div>
+                    <span>Đang xử lý...</span>
+                </div>
+                <div id="nextBtnText">
+                    Tiếp tục
+                    <i class="ri-arrow-right-line"></i>
+                </div>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Supabase Configuration
+        const SUPABASE_URL = 'https://rowpswmsgomytqrkcdlt.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJvd3Bzd21zZ29teXRxcmtjZGx0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDcxMjEwODYsImV4cCI6MjA2MjY5NzA4Nn0.nbR_KVbpcVpSWBdkUGTdIJ9eLPFOemALJfLaT-AQa0I';
+        
+        let supabaseClientInstance = null;
+        let currentUser = null;
+        let selectedBusinessType = null;
+
+        // Initialize Supabase
+        try {
+            if (typeof window.supabase !== 'undefined') {
+                supabaseClientInstance = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                console.log("Supabase client initialized successfully");
+            } else {
+                console.error("Supabase JS library not available");
+            }
+        } catch (error) {
+            console.error("Error initializing Supabase client:", error);
+        }
+
+        // Business Type Selection
+        document.addEventListener('DOMContentLoaded', function() {
+            const businessTypeCards = document.querySelectorAll('.business-type-card');
+            const businessOnlyFields = document.getElementById('businessOnlyFields');
+            const taxCodeInput = document.getElementById('taxCode');
+
+            // Handle business type selection
+            businessTypeCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    // Remove active class from all cards
+                    businessTypeCards.forEach(c => c.classList.remove('active'));
+                    
+                    // Add active class to selected card
+                    this.classList.add('active');
+                    
+                    // Store selected business type
+                    selectedBusinessType = this.dataset.type;
+                    
+                    // Update form based on business type
+                    updateFormForBusinessType(selectedBusinessType);
+                    
+                    // Auto scroll to basic info section with smooth animation
+                    scrollToBasicInfo();
+                    
+                    // Auto-generate shop name if fields are filled
+                    generateShopNameSuggestion();
+                    
+                    // Save to temporary storage
+                    saveToTempStorage();
+                });
+            });
+
+            // Auto scroll to basic info section
+            function scrollToBasicInfo() {
+                const basicInfoSection = document.querySelector('.section:nth-child(3)'); // Third section is basic info (after auto-fill notification)
+                if (basicInfoSection) {
+                    setTimeout(() => {
+                        // Calculate offset to show section header
+                        const headerHeight = document.querySelector('.mobile-header').offsetHeight;
+                        const progressHeight = document.querySelector('.progress-container').offsetHeight;
+                        const totalOffset = headerHeight + progressHeight + 10; // 10px margin
+                        
+                        const sectionTop = basicInfoSection.offsetTop - totalOffset;
+                        
+                        window.scrollTo({
+                            top: sectionTop,
+                            behavior: 'smooth'
+                        });
+                        
+                        // Add visual emphasis to the section
+                        basicInfoSection.style.transform = 'scale(1.02)';
+                        basicInfoSection.style.transition = 'transform 0.3s ease';
+                        
+                        setTimeout(() => {
+                            basicInfoSection.style.transform = 'scale(1)';
+                        }, 500);
+                        
+                    }, 300); // Small delay for better UX
+                }
+            }
+
+            function updateFormForBusinessType(type) {
+                const taxCodeLabel = document.querySelector('label[for="taxCode"]');
+                const taxCodeTooltip = taxCodeLabel.querySelector('.tooltip-icon');
+                
+                if (type === 'company' || type === 'official') {
+                    businessOnlyFields.classList.add('show');
+                    taxCodeInput.placeholder = "Nhập mã số thuế doanh nghiệp";
+                    taxCodeTooltip.setAttribute('data-tooltip', 'Mã số thuế doanh nghiệp theo giấy đăng ký kinh doanh');
+                } else {
+                    businessOnlyFields.classList.remove('show');
+                    taxCodeInput.placeholder = "Nhập mã số thuế hoặc số CMND/CCCD";
+                    taxCodeTooltip.setAttribute('data-tooltip', 'Đối với cá nhân: số CMND/CCCD hoặc mã số thuế cá nhân');
+                }
+            }
+
+            // Auto-select individual by default
+            const defaultCard = document.querySelector('.business-type-card[data-type="individual"]');
+            if (defaultCard) {
+                defaultCard.click();
+            }
+
+            // Initialize form validation
+            initializeFormValidation();
+            
+            // Initialize auto-fill if user is logged in
+            autoFillUserInfo();
+            
+            // Restore saved data if exists
+            restoreFromTempStorage();
+
+            // Initialize button handlers
+            initializeButtonHandlers();
+            
+            // Setup shop name auto-generation
+            setupShopNameGeneration();
+        });
+
+        // Form Validation
+        function initializeFormValidation() {
+            const form = document.getElementById('basicInfoForm');
+            const inputs = form.querySelectorAll('.form-control');
+
+            inputs.forEach(input => {
+                input.addEventListener('blur', () => validateField(input));
+                input.addEventListener('input', () => clearError(input));
+            });
+        }
+
+        function validateField(input) {
+            const value = input.value.trim();
+            const errorElement = input.parentNode.querySelector('.form-error');
+            let isValid = true;
+
+            // Clear previous error state
+            input.classList.remove('error');
+            errorElement.classList.remove('show');
+
+            // Required field validation
+            if (input.hasAttribute('required') || input.classList.contains('form-control')) {
+                if (!value) {
+                    showError(input, 'Trường này là bắt buộc');
+                    return false;
+                }
+            }
+
+            // Specific field validation
+            switch (input.id) {
+                case 'phone':
+                    if (!/^[0-9]{10,11}$/.test(value)) {
+                        showError(input, 'Số điện thoại không hợp lệ');
+                        isValid = false;
+                    }
+                    break;
+                case 'email':
+                    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+                        showError(input, 'Email không hợp lệ');
+                        isValid = false;
+                    }
+                    break;
+                case 'shopName':
+                    if (value.length < 3) {
+                        showError(input, 'Tên gian hàng phải có ít nhất 3 ký tự');
+                        isValid = false;
+                    }
+                    break;
+                case 'taxCode':
+                    if (selectedBusinessType === 'individual' || selectedBusinessType === 'household') {
+                        if (!/^[0-9]{9,12}$/.test(value)) {
+                            showError(input, 'Mã số thuế/CMND không hợp lệ');
+                            isValid = false;
+                        }
+                    } else {
+                        if (!/^[0-9]{10,13}$/.test(value)) {
+                            showError(input, 'Mã số thuế doanh nghiệp không hợp lệ');
+                            isValid = false;
+                        }
+                    }
+                    break;
+            }
+
+            return isValid;
+        }
+
+        function showError(input, message) {
+            input.classList.add('error');
+            const errorElement = input.parentNode.querySelector('.form-error');
+            errorElement.textContent = message;
+            errorElement.classList.add('show');
+        }
+
+        function clearError(input) {
+            input.classList.remove('error');
+            const errorElement = input.parentNode.querySelector('.form-error');
+            errorElement.classList.remove('show');
+        }
+
+        function validateForm() {
+            const form = document.getElementById('basicInfoForm');
+            const inputs = form.querySelectorAll('.form-control');
+            const categorySelect = document.getElementById('category');
+            let isValid = true;
+
+            // Validate business type selection
+            if (!selectedBusinessType) {
+                alert('Vui lòng chọn loại hình kinh doanh');
+                return false;
+            }
+
+            // Validate all form fields
+            inputs.forEach(input => {
+                // Skip company name validation if not required for current business type
+                if (input.id === 'companyName' && selectedBusinessType !== 'company' && selectedBusinessType !== 'official') {
+                    return;
+                }
+                
+                if (!validateField(input)) {
+                    isValid = false;
+                }
+            });
+
+            // Validate category selection
+            if (!categorySelect.value) {
+                showError(categorySelect, 'Vui lòng chọn ngành hàng');
+                isValid = false;
+            }
+
+            return isValid;
+        }
+
+        // Enhanced Auto-fill User Information
+        function autoFillUserInfo() {
+            // Get user data from various sources
+            const isAuthenticated = localStorage.getItem('userAuthenticated') === 'true';
+            const userName = localStorage.getItem('userName') || '';
+            const userEmail = localStorage.getItem('userEmail') || localStorage.getItem('userName') || ''; // fallback to userName if email not available
+            const userPhone = localStorage.getItem('userPhone') || '';
+            const userId = localStorage.getItem('userId') || '';
+
+            let hasAutoFilled = false;
+            const autoFilledFields = [];
+
+            // Auto-fill name
+            if (userName && !document.getElementById('fullName').value) {
+                // If userName looks like an email, extract name part
+                let displayName = userName;
+                if (userName.includes('@')) {
+                    displayName = userName.split('@')[0];
+                    // Replace dots and underscores with spaces and capitalize
+                    displayName = displayName.replace(/[._]/g, ' ');
+                    displayName = displayName.replace(/\b\w/g, l => l.toUpperCase());
+                }
+                const fullNameField = document.getElementById('fullName');
+                fullNameField.value = displayName;
+                autoFilledFields.push(fullNameField);
+                hasAutoFilled = true;
+            }
+
+            // Auto-fill email
+            if (userEmail && !document.getElementById('email').value) {
+                const emailField = document.getElementById('email');
+                emailField.value = userEmail;
+                autoFilledFields.push(emailField);
+                hasAutoFilled = true;
+            }
+
+            // Auto-fill phone if available
+            if (userPhone && !document.getElementById('phone').value) {
+                const phoneField = document.getElementById('phone');
+                phoneField.value = userPhone;
+                autoFilledFields.push(phoneField);
+                hasAutoFilled = true;
+            }
+
+            // Add animation to auto-filled fields
+            if (autoFilledFields.length > 0) {
+                setTimeout(() => {
+                    autoFilledFields.forEach((field, index) => {
+                        setTimeout(() => {
+                            field.classList.add('auto-filled');
+                            // Remove animation class after animation completes
+                            setTimeout(() => {
+                                field.classList.remove('auto-filled');
+                            }, 800);
+                        }, index * 200); // Stagger animations
+                    });
+                }, 100);
+            }
+
+            // Generate shop name suggestion after auto-fill
+            if (hasAutoFilled) {
+                setTimeout(() => {
+                    generateShopNameSuggestion();
+                }, 500);
+            }
+
+            // Show auto-fill notification if any field was filled
+            if (hasAutoFilled && isAuthenticated) {
+                const notification = document.getElementById('autoFillNotification');
+                notification.classList.add('show');
+                
+                // Auto-hide after 4 seconds
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                }, 4000);
+            }
+        }
+
+        // Shop Name Generation
+        function setupShopNameGeneration() {
+            const fullNameInput = document.getElementById('fullName');
+            const shopNameInput = document.getElementById('shopName');
+            
+            // Generate shop name when name changes
+            fullNameInput.addEventListener('input', debounce(() => {
+                if (fullNameInput.value.trim() && !shopNameInput.value.trim()) {
+                    generateShopNameSuggestion();
+                }
+            }, 500));
+            
+            // Also generate when business type changes
+            // This is called from the business type selection handler
+        }
+
+        function generateShopNameSuggestion() {
+            const fullName = document.getElementById('fullName').value.trim();
+            const shopNameInput = document.getElementById('shopName');
+            const shopNameHint = shopNameInput.parentNode.querySelector('.form-hint');
+            
+            if (!fullName || shopNameInput.value.trim()) {
+                return; // Don't override if shop name already exists
+            }
+
+            // Extract first name and last name
+            const nameParts = fullName.split(' ').filter(part => part.length > 0);
+            if (nameParts.length === 0) return;
+
+            const lastName = nameParts[nameParts.length - 1];
+            const firstName = nameParts[0];
+            
+            // Generate multiple suggestions based on business type
+            const suggestions = [];
+            
+            if (selectedBusinessType === 'individual') {
+                suggestions.push(`Shop_${firstName}${lastName}`);
+                suggestions.push(`${firstName}_Store`);
+                suggestions.push(`${lastName}_Shop`);
+            } else if (selectedBusinessType === 'household') {
+                suggestions.push(`${lastName}_Trading`);
+                suggestions.push(`${firstName}${lastName}_Business`);
+                suggestions.push(`${lastName}_Household`);
+            } else if (selectedBusinessType === 'company') {
+                suggestions.push(`${lastName}_Company`);
+                suggestions.push(`${firstName}${lastName}_Corp`);
+                suggestions.push(`${lastName}_Enterprise`);
+            } else if (selectedBusinessType === 'official') {
+                suggestions.push(`${lastName}_Official`);
+                suggestions.push(`${firstName}${lastName}_Brand`);
+                suggestions.push(`${lastName}_Store_Official`);
+            }
+
+            // Set the first suggestion as default
+            if (suggestions.length > 0) {
+                shopNameInput.value = suggestions[0];
+                
+                // Update hint with all suggestions
+                shopNameHint.innerHTML = `Gợi ý: ${suggestions.slice(0, 3).join(', ')}`;
+                
+                // Add click-to-use functionality for suggestions
+                const suggestionLinks = suggestions.slice(0, 3).map(suggestion => 
+                    `<span class="suggestion-link" onclick="useShopNameSuggestion('${suggestion}')">${suggestion}</span>`
+                );
+                shopNameHint.innerHTML = `Gợi ý: ${suggestionLinks.join(', ')}`;
+                
+                // Trigger validation to clear any previous errors
+                setTimeout(() => {
+                    validateField(shopNameInput);
+                }, 100);
+            }
+        }
+
+        // Function to use suggestion when clicked
+        function useShopNameSuggestion(suggestion) {
+            const shopNameInput = document.getElementById('shopName');
+            shopNameInput.value = suggestion;
+            shopNameInput.focus();
+            validateField(shopNameInput);
+            saveToTempStorage();
+        }
+
+        // Temporary Storage Functions
+        function saveToTempStorage() {
+            const formData = {
+                businessType: selectedBusinessType,
+                fullName: document.getElementById('fullName').value,
+                phone: document.getElementById('phone').value,
+                email: document.getElementById('email').value,
+                shopName: document.getElementById('shopName').value,
+                category: document.getElementById('category').value,
+                taxCode: document.getElementById('taxCode').value,
+                companyName: document.getElementById('companyName').value
+            };
+
+            localStorage.setItem('sellerOnboarding_step1', JSON.stringify(formData));
+        }
+
+        function restoreFromTempStorage() {
+            const savedData = localStorage.getItem('sellerOnboarding_step1');
+            if (savedData) {
+                const formData = JSON.parse(savedData);
+                
+                // Restore business type selection
+                if (formData.businessType) {
+                    const card = document.querySelector(`.business-type-card[data-type="${formData.businessType}"]`);
+                    if (card) {
+                        card.click();
+                    }
+                }
+                
+                // Restore form fields
+                document.getElementById('fullName').value = formData.fullName || '';
+                document.getElementById('phone').value = formData.phone || '';
+                document.getElementById('email').value = formData.email || '';
+                document.getElementById('shopName').value = formData.shopName || '';
+                document.getElementById('category').value = formData.category || '';
+                document.getElementById('taxCode').value = formData.taxCode || '';
+                document.getElementById('companyName').value = formData.companyName || '';
+            }
+        }
+
+        // Button Handlers
+        function initializeButtonHandlers() {
+            const backBtn = document.getElementById('backBtn');
+            const saveDraftBtn = document.getElementById('saveDraftBtn');
+            const nextBtn = document.getElementById('nextBtn');
+
+            backBtn.addEventListener('click', function() {
+                if (confirm('Bạn có chắc muốn quay lại? Dữ liệu đã nhập sẽ được lưu tạm thời.')) {
+                    saveToTempStorage();
+                    window.location.href = '../index.html';
+                }
+            });
+
+            saveDraftBtn.addEventListener('click', function() {
+                saveToTempStorage();
+                alert('Đã lưu nháp thành công!');
+            });
+
+            nextBtn.addEventListener('click', function() {
+                if (validateForm()) {
+                    saveToTempStorage();
+                    navigateToNextStep();
+                }
+            });
+
+            // Auto-save on form changes
+            const form = document.getElementById('basicInfoForm');
+            form.addEventListener('input', debounce(saveToTempStorage, 1000));
+        }
+
+        function navigateToNextStep() {
+            const nextBtn = document.getElementById('nextBtn');
+            const loading = document.getElementById('nextBtnLoading');
+            const btnText = document.getElementById('nextBtnText');
+
+            // Show loading state
+            loading.classList.add('show');
+            btnText.style.display = 'none';
+            nextBtn.disabled = true;
+
+            // Simulate processing
+            setTimeout(() => {
+                window.location.href = 'PaymentWarehouseScreen.html';
+            }, 1000);
+        }
+
+        // Utility Functions
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // Handle device back button (for mobile browsers)
+        window.addEventListener('popstate', function(event) {
+            if (confirm('Bạn có chắc muốn rời khỏi trang này? Dữ liệu đã nhập sẽ được lưu tạm thời.')) {
+                saveToTempStorage();
+            } else {
+                history.pushState(null, null, location.href);
+            }
+        });
+
+        // Push initial state for back button handling
+        history.pushState(null, null, location.href);
+    </script>
+</body>
+</html> 

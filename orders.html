@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đơn hàng & Đánh giá - i-LogiCare@LTA</title>
+    <link rel="icon" type="image/png" href="../images/car.png">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <!-- Google Fonts (Inter) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.4.0/fonts/remixicon.css">
+    <!-- Supabase JS -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <style>
+        :root {
+            --primary: #5AAF4B;
+            --primary-dark: #4a9c3d;
+            --primary-light: #7bc36e;
+            --border-color: #E5E7EB;
+            --bg-light: #F3F4F6;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: var(--bg-light);
+        }
+
+        /* Header Styles */
+        .section-header {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            background: var(--primary);
+            color: white;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            color: white;
+            padding: 8px;
+            font-size: 18px;
+        }
+
+        .section-header h1 {
+            flex: 1;
+            margin: 0 12px;
+            font-size: 18px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 16px;
+        }
+
+        .header-actions button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 18px;
+        }
+
+        /* Tab Styles */
+        .order-tabs, .review-tabs {
+            display: flex;
+            overflow-x: auto;
+            background: white;
+            border-bottom: 1px solid #eee;
+            position: sticky;
+            top: 56px;
+            z-index: 99;
+        }
+
+        .tab-btn {
+            padding: 12px 16px;
+            border: none;
+            background: none;
+            white-space: nowrap;
+            color: #666;
+            position: relative;
+        }
+
+        .tab-btn.active {
+            color: var(--primary);
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 16px;
+            right: 16px;
+            height: 2px;
+            background: var(--primary);
+        }
+
+        /* Order Card Styles */
+        .order-card {
+            background: white;
+            margin: 8px 0;
+            padding: 16px;
+            border-bottom: 8px solid #f5f5f5;
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .shop-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .order-status {
+            color: var(--primary);
+        }
+
+        .product-item {
+            display: flex;
+            gap: 12px;
+            margin: 12px 0;
+        }
+
+        .product-image {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        .product-details {
+            flex: 1;
+        }
+
+        .product-name {
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .product-variation {
+            color: #666;
+            font-size: 12px;
+        }
+
+        .product-price {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 8px;
+        }
+
+        .order-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #eee;
+        }
+
+        .order-total {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .order-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .order-btn {
+            padding: 8px 16px;
+            border: 1px solid var(--primary);
+            border-radius: 4px;
+            background: white;
+            color: var(--primary);
+        }
+
+        .order-btn.primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Review Stats Styles */
+        .review-stats {
+            display: flex;
+            justify-content: space-around;
+            padding: 16px;
+            background: white;
+            border-bottom: 1px solid #eee;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .stat-value {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+        }
+
+        /* Review Card Styles */
+        .review-card {
+            background: white;
+            margin: 8px 0;
+            padding: 16px;
+            border-bottom: 8px solid #f5f5f5;
+        }
+
+        .review-reward {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px;
+            background: #fff9f2;
+            border-radius: 4px;
+            margin-bottom: 12px;
+        }
+
+        .review-reward i {
+            color: #ffa726;
+        }
+
+        .review-btn {
+            padding: 8px 16px;
+            border-radius: 4px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            width: 100%;
+            margin-top: 12px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Orders Section -->
+    <section id="orders" class="section-container">
+        <header class="section-header">
+            <button class="back-btn" onclick="navigateBack()">
+                <i class="ri-arrow-left-line"></i>
+            </button>
+            <h1>Đơn đã mua</h1>
+            <div class="header-actions">
+                <button class="refresh-btn" onclick="refreshOrders()" title="Tải lại đơn hàng">
+                    <i class="ri-refresh-line"></i>
+                </button>
+                <button class="search-btn">
+                    <i class="ri-search-2-line"></i>
+                </button>
+                <button class="chat-btn">
+                    <i class="ri-message-2-line"></i>
+                </button>
+            </div>
+        </header>
+
+        <div class="order-tabs">
+            <button class="tab-btn active" data-tab="all" onclick="showOrderTab('all')">Tất cả</button>
+            <button class="tab-btn" data-tab="pending" onclick="showOrderTab('pending')">Chờ xác nhận</button>
+            <button class="tab-btn" data-tab="pickup" onclick="showOrderTab('pickup')">Chờ lấy hàng</button>
+            <button class="tab-btn" data-tab="shipping" onclick="showOrderTab('shipping')">Đang giao</button>
+            <button class="tab-btn" data-tab="delivered" onclick="showOrderTab('delivered')">Đã giao</button>
+            <button class="tab-btn" data-tab="cancelled" onclick="showOrderTab('cancelled')">Đã hủy</button>
+        </div>
+
+        <div class="orders-container">
+            <!-- Order cards will be dynamically inserted here -->
+        </div>
+    </section>
+
+    <!-- Reviews Section -->
+    <section id="reviews" class="section-container" style="display: none;">
+        <header class="section-header">
+            <button class="back-btn" onclick="navigateBack()">
+                <i class="ri-arrow-left-line"></i>
+            </button>
+            <h1>Đánh giá của tôi</h1>
+            <div class="header-actions">
+                <button class="search-btn">
+                    <i class="ri-search-2-line"></i>
+                </button>
+                <button class="chat-btn">
+                    <i class="ri-message-2-line"></i>
+                </button>
+            </div>
+        </header>
+
+        <div class="review-stats">
+            <div class="stat-item">
+                <span class="stat-value">235</span>
+                <span class="stat-label">Đánh giá</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-value">29,4k</span>
+                <span class="stat-label">Xu đã nhận</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-value">64</span>
+                <span class="stat-label">Lượt thích</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-value">98</span>
+                <span class="stat-label">Lượt xem</span>
+            </div>
+        </div>
+
+        <div class="review-tabs">
+            <button class="tab-btn active" onclick="showReviewTab('pending')">Chưa đánh giá</button>
+            <button class="tab-btn" onclick="showReviewTab('completed')">Đã đánh giá</button>
+        </div>
+
+        <div class="reviews-container">
+            <!-- Review cards will be dynamically inserted here -->
+        </div>
+    </section>
+
+    <script>
+        const SUPABASE_URL = 'https://rowpswmsgomytqrkcdlt.supabase.co'; // Thay bằng URL của bạn
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJvd3Bzd21zZ29teXRxcmtjZGx0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDcxMjEwODYsImV4cCI6MjA2MjY5NzA4Nn0.nbR_KVbpcVpSWBdkUGTdIJ9eLPFOemALJfLaT-AQa0I'; // Thay bằng Key của bạn
+        let supabaseClient = null;
+        let currentAuthUserId = null;
+
+        try {
+            if (typeof window.supabase !== 'undefined' && typeof window.supabase.createClient === 'function') {
+                supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                console.log('Supabase client initialized in orders.html');
+            } else {
+                console.error("Supabase JS library not available in orders.html.");
+            }
+        } catch (error) {
+            console.error("Error initializing Supabase client in orders.html:", error);
+        }
+
+        async function authenticateUserAndLoadData() {
+            if (!supabaseClient) {
+                document.querySelector('.orders-container').innerHTML = '<p class="text-danger text-center p-3">Lỗi kết nối hệ thống.</p>';
+                return;
+            }
+
+            // Try to get user from Supabase auth first
+            const { data: { user }, error: authError } = await supabaseClient.auth.getUser();
+
+            if (authError || !user) {
+                console.warn('⚠️ User not authenticated in Supabase for orders page:', authError);
+                
+                // Fallback: try to get from localStorage (for cases where Supabase auth might be out of sync)
+                const localUserId = localStorage.getItem('userId');
+                const localUserEmail = localStorage.getItem('userEmail');
+                
+                if (localUserId && localUserEmail) {
+                    console.log('🔄 Using localStorage fallback for user ID:', localUserId);
+                    currentAuthUserId = localUserId;
+                    
+                    // Continue with loading orders using localStorage data
+                    const tabParam = getUrlParameter('tab');
+                    const initialTab = tabParam || 'all';
+                    showOrderTab(initialTab);
+                    return;
+                } else {
+                    // No fallback available
+                document.querySelector('.orders-container').innerHTML = '<p class="text-center p-3">Vui lòng <a href="index.html#login-section">đăng nhập</a> để xem đơn hàng.</p>';
+                return;
+                }
+            }
+            
+            currentAuthUserId = user.id;
+            console.log('✅ User authenticated for orders:', currentAuthUserId);
+
+            // Double-check with localStorage for consistency
+            const localUserId = localStorage.getItem('userId');
+            if (localUserId && localUserId !== currentAuthUserId) {
+                console.warn('⚠️ User ID mismatch between Supabase and localStorage');
+                console.log('Supabase user ID:', currentAuthUserId);
+                console.log('localStorage user ID:', localUserId);
+            }
+
+            // Lấy tab từ URL và tải đơn hàng
+            const tabParam = getUrlParameter('tab');
+            const initialTab = tabParam || 'all'; // Mặc định là tab 'all'
+            showOrderTab(initialTab); // Hàm này sẽ gọi loadOrders(initialTab)
+        }
+        // Function to translate order status to Vietnamese
+        function getOrderStatusText(status) {
+            const statusMap = {
+                'pending': 'Chờ xác nhận',
+                'confirmed': 'Đã xác nhận',
+                'pickup': 'Chờ lấy hàng',
+                'shipping': 'Đang giao',
+                'delivered': 'Đã giao',
+                'cancelled': 'Đã hủy',
+                'refunded': 'Đã hoàn tiền'
+            };
+            return statusMap[status] || status || 'N/A';
+        }
+
+        // Function to get URL parameters
+        function getUrlParameter(name) {
+            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+            var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+            var results = regex.exec(location.search);
+            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+        }
+
+        // Function to show order tab content
+        function showOrderTab(tabName) {
+            const tabs = document.querySelectorAll('.order-tabs .tab-btn');
+            tabs.forEach(tab => {
+                if (tab.getAttribute('data-tab') === tabName) {
+                    tab.classList.add('active');
+                } else {
+                    tab.classList.remove('active');
+                }
+            });
+            
+            // Load orders based on tab
+            loadOrders(tabName);
+        }
+
+        // Function to show review tab content
+        function showReviewTab(tabName) {
+            const tabs = document.querySelectorAll('.review-tabs .tab-btn');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Load reviews based on tab
+            loadReviews(tabName);
+        }
+
+        function navigateToReviews(orderId) {
+            showSection('reviews'); 
+            showReviewTab('pending'); // Mở tab "Chưa đánh giá"
+            console.log("Navigate to review for order:", orderId);
+        }
+
+        async function cancelOrder(orderId) {
+            if (!confirm('Bạn có chắc chắn muốn hủy đơn hàng này?')) {
+                return;
+            }
+
+            try {
+                const { error } = await supabaseClient
+                    .from('orders')
+                    .update({ status: 'cancelled' })
+                    .eq('id', orderId)
+                    .eq('user_id', currentAuthUserId);
+
+                if (error) throw error;
+
+                alert('Đơn hàng đã được hủy thành công!');
+                // Reload current tab
+                const activeTab = document.querySelector('.order-tabs .tab-btn.active');
+                const currentTab = activeTab ? activeTab.getAttribute('data-tab') : 'all';
+                loadOrders(currentTab);
+
+            } catch (error) {
+                console.error('Error cancelling order:', error);
+                alert('Có lỗi xảy ra khi hủy đơn hàng. Vui lòng thử lại.');
+            }
+        }
+
+        // Function to load orders
+        async function loadOrders(status) {
+            const container = document.querySelector('.orders-container');
+            if (!container || !supabaseClient || !currentAuthUserId) {
+                if (container) container.innerHTML = '<p class="text-center p-3">Không thể tải đơn hàng.</p>';
+                return;
+            }
+
+            container.innerHTML = '<div class="text-center p-3"><div class="spinner-border spinner-border-sm text-primary" role="status"></div> Đang tải đơn hàng...</div>'; // Loading state
+
+            try {
+                // Debug logging
+                console.log('🔍 Loading orders with status:', status);
+                console.log('🔍 Current user ID:', currentAuthUserId);
+
+                // First, get ALL orders for debugging
+                const { data: allOrders, error: allError } = await supabaseClient
+                    .from('orders')
+                    .select('*')
+                    .eq('user_id', currentAuthUserId)
+                    .order('created_at', { ascending: false });
+
+                if (allError) {
+                    console.error('Error fetching all orders:', allError);
+                    throw allError;
+                }
+
+                console.log('🔍 ALL orders found:', allOrders?.length || 0);
+                if (allOrders) {
+                    allOrders.forEach(order => {
+                        console.log('🔍 Order:', {
+                            id: order.id,
+                            status: order.status,
+                            created_at: order.created_at
+                        });
+                    });
+                }
+
+                // Now get orders with items
+                let query = supabaseClient
+                    .from('orders')
+                    .select(`
+                        id,
+                        order_number,
+                        total_amount,
+                        status,
+                        created_at,
+                        order_items ( 
+                            product_name, 
+                            quantity, 
+                            unit_price, 
+                            image_url,
+                            seller_id
+                        )
+                    `)
+                    .eq('user_id', currentAuthUserId)
+                    .order('created_at', { ascending: false });
+
+                if (status && status !== 'all') {
+                    query = query.eq('status', status);
+                    console.log('🔍 Filtering by status:', status);
+                }
+
+                const { data: orders, error } = await query;
+
+                // Debug logging
+                console.log('🔍 Filtered orders found:', orders?.length || 0);
+                if (orders) {
+                    orders.forEach((order, index) => {
+                        console.log(`🔍 Filtered Order ${index + 1}:`, {
+                            id: order.id,
+                            status: order.status,
+                            created_at: order.created_at,
+                            total_amount: order.total_amount
+                        });
+                    });
+                }
+
+                if (error) {
+                    console.error('Error fetching orders from Supabase:', error);
+                    throw error;
+                }
+
+                container.innerHTML = ''; // Clear loading or previous orders
+
+                if (orders && orders.length > 0) {
+                    orders.forEach(order => {
+                        // Logic render HTML cho mỗi order (tương tự như code cũ của bạn,
+                        // nhưng lấy dữ liệu từ đối tượng `order` từ Supabase)
+                        let itemsHTML = '';
+                        if (order.order_items && order.order_items.length > 0) {
+                            itemsHTML = order.order_items.map(item => `
+                                <div class="product-item">
+                                    <img src="${item.image_url || '../images/placeholder.jpg'}" class="product-image" alt="${item.product_name}" onerror="this.src='../images/placeholder.jpg'">
+                                    <div class="product-details">
+                                        <div class="product-name">${item.product_name}</div>
+                                        <div class="product-price">
+                                            <span class="current-price">₫${(item.unit_price || 0).toLocaleString()}</span>
+                                            <span class="quantity">x${item.quantity}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('');
+                        } else {
+                            itemsHTML = '<p class="small text-muted">Không có chi tiết sản phẩm.</p>';
+                        }
+
+                        // Get shop name from first order item's seller_id (simplified approach)
+                        const firstSellerId = order.order_items?.[0]?.seller_id;
+                        const shopName = firstSellerId ? `Shop ${firstSellerId.slice(0, 8)}...` : 'Shop Đối Tác';
+
+                        container.innerHTML += `
+                            <div class="order-card">
+                                <div class="order-header">
+                                    <div class="shop-info">
+                                        <i class="ri-store-line"></i>
+                                        <span>${shopName}</span>
+                                    </div>
+                                    <div class="order-status">${getOrderStatusText(order.status)}</div>
+                                </div>
+                                ${itemsHTML}
+                                <div class="order-footer">
+                                    <div class="order-total">
+                                        <span>Tổng số tiền:</span>
+                                        <span class="total-amount">₫${(order.total_amount || 0).toLocaleString()}</span>
+                                    </div>
+                                    <div class="order-actions">
+                                        <button class="order-btn">Mua lại</button>
+                                        ${order.status === 'delivered' ? '<button class="order-btn primary" onclick="navigateToReviews(\'' + order.id + '\')">Đánh giá</button>' : ''}
+                                        ${order.status === 'pending' ? '<button class="order-btn" onclick="cancelOrder(\'' + order.id + '\')">Hủy đơn</button>' : ''}
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                } else {
+                    container.innerHTML = `
+                        <div class="text-center py-5">
+                            <i class="ri-box-3-line" style="font-size: 48px; color: #ccc;"></i>
+                            <p class="text-muted mt-2">Không có đơn hàng nào${status && status !== 'all' ? ' ở trạng thái này' : ''}.</p>
+                        </div>
+                    `;
+                }
+
+            } catch (error) {
+                console.error('Failed to load orders:', error);
+                container.innerHTML = '<p class="text-danger text-center p-3">Lỗi tải danh sách đơn hàng. Vui lòng thử lại.</p>';
+            }
+        }
+        
+
+        // Function to load reviews
+        function loadReviews(status) {
+            const container = document.querySelector('.reviews-container');
+            container.innerHTML = ''; // Clear existing reviews
+            
+            if (status === 'pending') {
+                // Demo pending review data
+                const pendingReviews = [
+                    {
+                        shop: 'HAKUDA Hobby Store',
+                        product: {
+                            name: 'Castrol Magnatec 5W-30 API SP 4L',
+                            image: '../images/3.jpg',
+                            daysLeft: 29
+                        }
+                    },
+                    {
+                        shop: 'Goojodoq Official Shop.VN',
+                        product: {
+                            name: 'Lốp Michelin Pilot Sport 4 205/55R16',
+                            image: '../images/4.jpg',
+                            daysLeft: 21
+                        }
+                    }
+                ];
+                
+                pendingReviews.forEach(review => {
+                    container.innerHTML += `
+                        <div class="review-card">
+                            <div class="review-reward">
+                                <i class="ri-coins-line"></i>
+                                <span>Đánh giá tất cả sản phẩm và nhận đến 1400 Xu</span>
+                            </div>
+                            <div class="product-item">
+                                <img src="${review.product.image}" class="product-image" alt="${review.product.name}" onerror="this.src='../images/placeholder.jpg'">
+                                <div class="product-details">
+                                    <div class="product-name">${review.product.name}</div>
+                                    <div class="product-variation">Chỉ còn ${review.product.daysLeft} ngày để đánh giá</div>
+                                </div>
+                            </div>
+                            <button class="review-btn">Đánh giá <i class="ri-coins-line"></i> +200</button>
+                        </div>
+                    `;
+                });
+            } else {
+                // Demo completed reviews
+                const completedReviews = [
+                    {
+                        shop: 'Shop Demo LTA',
+                        product: {
+                            name: 'Cảm biến áp suất lốp TPMS V3',
+                            image: '../images/5.jpg'
+                        },
+                        rating: 5,
+                        comment: 'Sản phẩm rất tốt, giao hàng nhanh!',
+                        date: '2024-03-15'
+                    }
+                ];
+
+                completedReviews.forEach(review => {
+                    container.innerHTML += `
+                        <div class="review-card">
+                            <div class="product-item">
+                                <img src="${review.product.image}" class="product-image" alt="${review.product.name}" onerror="this.src='../images/placeholder.jpg'">
+                                <div class="product-details">
+                                    <div class="product-name">${review.product.name}</div>
+                                    <div class="product-variation">
+                                        ${Array(review.rating).fill('<i class="ri-star-line text-warning"></i>').join('')}
+                                        <span class="text-muted ms-2">${new Date(review.date).toLocaleDateString('vi-VN')}</span>
+                                    </div>
+                                    <div class="mt-2">${review.comment}</div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+        }
+
+        // Function to refresh orders for current tab
+        function refreshOrders() {
+            const activeTab = document.querySelector('.order-tabs .tab-btn.active');
+            const currentTab = activeTab ? activeTab.getAttribute('data-tab') : 'all';
+            console.log('🔄 Refreshing orders for tab:', currentTab);
+            loadOrders(currentTab);
+        }
+
+        // Function to force reload with debug info
+        function debugReload() {
+            console.log('🐛 Debug reload triggered');
+            console.log('🐛 Current auth user ID:', currentAuthUserId);
+            console.log('🐛 Supabase client:', supabaseClient);
+            
+            // Check authentication status
+            if (supabaseClient) {
+                supabaseClient.auth.getUser().then(({ data: { user }, error }) => {
+                    console.log('🐛 Current Supabase auth user:', user);
+                    console.log('🐛 Auth error:', error);
+                    if (user && user.id !== currentAuthUserId) {
+                        console.log('🐛 User ID mismatch detected!');
+                        currentAuthUserId = user.id;
+                    }
+                    refreshOrders();
+                });
+            } else {
+                refreshOrders();
+            }
+        }
+
+        // Debug function to show all orders for current user
+        async function debugShowAllOrders() {
+            if (!supabaseClient || !currentAuthUserId) {
+                console.log('🐛 Cannot debug - missing client or user ID');
+                return;
+            }
+
+            try {
+                // Get ALL orders for current user
+                const { data: allOrders, error } = await supabaseClient
+                    .from('orders')
+                    .select('*')
+                    .eq('user_id', currentAuthUserId)
+                    .order('created_at', { ascending: false });
+
+                if (error) {
+                    console.error('🐛 Error fetching all orders:', error);
+                    return;
+                }
+
+                console.log('🐛 ALL ORDERS FOR USER:', currentAuthUserId);
+                console.table(allOrders);
+                
+                // Group by status
+                const ordersByStatus = {};
+                allOrders.forEach(order => {
+                    const status = order.status || 'null';
+                    if (!ordersByStatus[status]) ordersByStatus[status] = [];
+                    ordersByStatus[status].push(order);
+                });
+
+                console.log('🐛 ORDERS GROUPED BY STATUS:');
+                Object.keys(ordersByStatus).forEach(status => {
+                    console.log(`📊 ${status}: ${ordersByStatus[status].length} orders`);
+                });
+
+            } catch (error) {
+                console.error('🐛 Debug error:', error);
+            }
+        }
+
+        // Add debug button functionality
+        function addDebugButtons() {
+            if (window.location.search.includes('debug=true')) {
+                const debugPanel = document.createElement('div');
+                debugPanel.style.cssText = 'position: fixed; top: 10px; right: 10px; z-index: 9999; background: white; padding: 10px; border: 1px solid #ccc; border-radius: 5px;';
+                debugPanel.innerHTML = `
+                    <button onclick="debugReload()" style="margin: 2px; padding: 5px;">Debug Reload</button><br>
+                    <button onclick="debugShowAllOrders()" style="margin: 2px; padding: 5px;">Show All Orders</button><br>
+                    <button onclick="refreshOrders()" style="margin: 2px; padding: 5px;">Refresh Current Tab</button>
+                `;
+                document.body.appendChild(debugPanel);
+            }
+        }
+
+        // Initialize based on URL parameters
+        document.addEventListener('DOMContentLoaded', () => {
+            authenticateUserAndLoadData(); // Gọi hàm chính
+            addDebugButtons(); // Add debug controls if needed
+
+            // Logic cho reviews (nếu trang này xử lý cả reviews)
+            const tabParam = getUrlParameter('tab');
+            if (tabParam && tabParam.startsWith('review_')) { // Ví dụ: review_pending
+                document.getElementById('orders').style.display = 'none';
+                document.getElementById('reviews').style.display = 'block';
+                const reviewStatus = tabParam.split('_')[1];
+                showReviewTab(reviewStatus || 'pending');
+                // Cập nhật active class cho tab review chính (nếu có)
+            }
+        });
+
+        // Navigation function
+        function navigateBack() {
+            window.history.back();
+        }
+
+        // Show/hide sections
+        function showSection(sectionId) {
+            document.querySelectorAll('.section-container').forEach(section => {
+                section.style.display = 'none';
+            });
+            document.getElementById(sectionId).style.display = 'block';
+        }
+    </script>
+</body>
+</html> 

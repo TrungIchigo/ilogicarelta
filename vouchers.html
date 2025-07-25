@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Siêu Voucher - i-LogiCare</title>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #5AAF4B;
+            --primary-dark: #4a9c3d;
+            --primary-light: #7bc36e;
+            --secondary: #202D4A;
+            --secondary-dark: #1a2540;
+            --secondary-light: #2d3f66;
+            --accent: #FFC107;
+            --accent-dark: #e6ae06;
+            --accent-light: #ffcd38;
+            --neutral-light: #F3F4F6;
+            --neutral-dark: #1F2937;
+            --white: #FFFFFF;
+            --black: #000000;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: var(--text-color);
+        }
+
+        /* Header Styles */
+        .header {
+            background: var(--primary);
+            color: var(--white);
+            padding: 12px 16px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-title {
+            font-size: 18px;
+            margin: 0;
+            color: var(--white);
+        }
+
+        .back-button {
+            color: var(--white);
+            text-decoration: none;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+        }
+
+        /* Voucher Category Navigation */
+        .voucher-nav {
+            background: var(--white);
+            padding: 12px;
+            overflow-x: auto;
+            white-space: nowrap;
+            border-bottom: 1px solid var(--border-color);
+            max-width: 100%;
+        }
+
+        .voucher-nav-item {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 8px 16px;
+            color: var(--text-color);
+            text-decoration: none;
+            border-radius: 8px;
+            background: var(--primary);
+            margin-right: 8px;
+            max-width: fit-content;
+        }
+
+        .voucher-nav-item i {
+            font-size: 24px;
+            margin-bottom: 4px;
+            color: var(--white);
+        }
+
+        .voucher-nav-item span {
+            font-size: 12px;
+            color: var(--white);
+        }
+
+        /* Voucher Card Styles */
+        .voucher-section {
+            margin: 16px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            justify-content: space-between;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #999;
+            font-weight: normal;
+            margin-bottom: 12px;
+        }
+
+        .voucher-card {
+            background: var(--white);
+            border-radius: 10px;
+            border: 1px solid var(--primary-dark);
+            margin-bottom: 12px;
+            display: flex;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .voucher-left {
+            background: linear-gradient(to right, var(--primary-dark), var(--primary-light));
+            color: var(--white);
+            padding: 16px;
+            width: 100px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .voucher-left::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: radial-gradient(circle at 0 65%, transparent 8px, white 8px) repeat-y;
+            background-size: 4px 16px;
+        }
+
+        .voucher-brand {
+            background: linear-gradient(to right, var(--secondary), var(--secondary-light));
+            color: var(--white);
+            padding: 16px;
+            width: 100px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .voucher-brand::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: radial-gradient(circle at 0 65%, transparent 8px, white 8px) repeat-y;
+            background-size: 4px 16px;
+        }
+
+        .voucher-special {
+            background: linear-gradient(to right, var(--accent), var(--accent-light));
+            color: black;
+            padding: 16px;
+            width: 100px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .voucher-special::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: radial-gradient(circle at 0 65%, transparent 8px, white 8px) repeat-y;
+            background-size: 4px 16px;
+        }
+
+        .voucher-right {
+            padding: 16px;
+            flex: 1;
+        }
+
+        .voucher-value {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        .voucher-type {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        .voucher-conditions {
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .voucher-validity {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .save-btn {
+            background: var(--primary);
+            color: var(--white);
+            border: none;
+            padding: 6px 16px;
+            border-radius: 4px;
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        /* Flash Sale Section */
+        .flash-sale {
+            background: var(--white);
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .flash-sale-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .flash-sale-title {
+            color: var(--primary);
+            font-weight: bold;
+            margin-right: 12px;
+        }
+
+        .countdown {
+            background: var(--primary);
+            color: var(--white);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .time-slots {
+            display: flex;
+            overflow-x: auto;
+            gap: 12px;
+            padding-bottom: 8px;
+            justify-content: space-between;
+            max-width: 100%;
+        }
+
+        .time-slot {
+            text-align: center;
+            min-width: 60px;
+        }
+
+        .time-value {
+            font-weight: bold;
+        }
+
+        .time-label {
+            font-size: 12px;
+            color: #999;
+        }
+
+        /* Toast Notification */
+        .toast-notification {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--primary);
+            opacity: 0.5;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            z-index: 1000;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            text-align: center;
+            min-width: 250px;
+            max-width: 100%;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .toast-notification.show {
+            visibility: visible;
+            opacity: 0.9;
+        }
+
+        /* Active time slot */
+        .time-slot.active .time-value {
+            color: var(--primary);
+        }
+
+        .time-slot.active .time-label {
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        /* Hover effects */
+        .voucher-card {
+            transition: transform 0.2s ease;
+        }
+
+        .voucher-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .save-btn:not(:disabled):hover {
+            background: var(--secondary);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header d-flex align-items-center">
+        <a href="index.html" class="back-button me-3">
+            <i class="ri-arrow-left-line"></i>
+        </a>
+        <h1 class="header-title text-center">Kho Voucher i-LogiCare@LTA</h1>
+    </div>
+
+    <!-- Voucher Categories -->
+    <div class="voucher-nav d-flex justify-content-between row-cols-4">
+        <a href="#" class="voucher-nav-item col-md-3">
+            <i class="ri-store-2-line"></i>
+            <span>Voucher Shop</span>
+        </a>
+        <a href="#" class="voucher-nav-item col-md-3">
+            <i class="ri-truck-line"></i>
+            <span>Freeship</span>
+        </a>
+        <a href="#" class="voucher-nav-item col-md-3">
+            <i class="ri-flashlight-line"></i>
+            <span>Khuyến mãi</span>
+        </a>
+        <a href="#" class="voucher-nav-item col-md-3">
+            <i class="ri-percent-line"></i>
+            <span>Hoàn xu</span>
+        </a>
+    </div>
+
+    <!-- Flash Sale Section -->
+    <div class="flash-sale">
+        <div class="flash-sale-header">
+            <span class="flash-sale-title">
+                <i class="ri-flashlight-line"></i>
+                FLASH SALE CHỚP NHOÁNG
+            </span>
+            <span class="countdown">10:06:31</span>
+        </div>
+        <div class="time-slots d-flex justify-content-between">
+            <div class="time-slot">
+                <div class="time-value">12:00</div>
+                <div class="time-label">Đang diễn ra</div>
+            </div>
+            <div class="time-slot">
+                <div class="time-value">15:00</div>
+                <div class="time-label">Sắp diễn ra</div>
+            </div>
+            <div class="time-slot">
+                <div class="time-value">17:00</div>
+                <div class="time-label">Sắp diễn ra</div>
+            </div>
+            <div class="time-slot">
+                <div class="time-value">19:00</div>
+                <div class="time-label">Sắp diễn ra</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Voucher Sections -->
+    <div class="voucher-section">
+        <div class="section-title">
+            VOUCHER LẤY SỚM           
+        </div>
+        <div class="subtitle">Số lượng có hạn, dành cho những khách hàng nhanh nhất</div>
+
+        <!-- Voucher Cards -->
+        <div class="voucher-card">
+            <div class="voucher-left">
+                <i class="ri-store-2-line mb-2"></i>
+                <span>HOT</span>
+            </div>
+            <div class="voucher-right">
+                <div class="voucher-value">Giảm 15%</div>
+                <div class="voucher-conditions">Đơn tối thiểu ₫500k</div>
+                <div class="voucher-validity">Có hiệu lực từ 15.05</div>
+                <button class="save-btn">Lưu</button>
+            </div>
+        </div>
+
+        <div class="voucher-card">
+            <div class="voucher-left">
+                <i class="ri-truck-line mb-2"></i>
+                <span>FREESHIP</span>
+            </div>
+            <div class="voucher-right">
+                <div class="voucher-value">Giảm ₫15k</div>
+                <div class="voucher-conditions">Đơn tối thiểu ₫99k</div>
+                <div class="voucher-validity">Có hiệu lực từ 15.05</div>
+                <button class="save-btn">Lưu</button>
+            </div>
+        </div>
+
+        <div class="voucher-card">
+            <div class="voucher-left">
+                <i class="ri-store-2-line mb-2"></i>
+                <span>BẠN MỚI</span>
+            </div>
+            <div class="voucher-right">
+                <div class="voucher-value">Giảm ₫50k</div>
+                <div class="voucher-conditions">Đơn tối thiểu ₫250k</div>
+                <div class="voucher-validity">Có hiệu lực từ 15.05</div>
+                <button class="save-btn">Lưu</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Additional Voucher Sections -->
+    <div class="voucher-section">
+        <div class="section-title">
+            VOUCHER FREESHIP           
+        </div>
+        <div class="subtitle">Miễn phí vận chuyển toàn quốc</div>
+
+        <div class="voucher-card">
+            <div class="voucher-left">
+                <i class="ri-truck-line mb-2"></i>
+                <span>FREESHIP</span>
+            </div>
+            <div class="voucher-right">
+                <div class="voucher-value">Miễn phí vận chuyển</div>
+                <div class="voucher-conditions">Đơn tối thiểu ₫300k</div>
+                <div class="voucher-validity">HSD: 31.05.2024</div>
+                <button class="save-btn">Lưu</button>
+            </div>
+        </div>
+
+        <div class="voucher-card">
+            <div class="voucher-left">
+                <i class="ri-truck-line mb-2"></i>
+                <span>FREESHIP+</span>
+            </div>
+            <div class="voucher-right">
+                <div class="voucher-value">Giảm 50% phí vận chuyển</div>
+                <div class="voucher-conditions">Đơn tối thiểu ₫150k</div>
+                <div class="voucher-validity">HSD: 31.05.2024</div>
+                <button class="save-btn">Lưu</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="voucher-section">
+        <div class="section-title">
+            KHUYẾN MÃI ĐẶC BIỆT          
+        </div>
+        <div class="subtitle">Ưu đãi dành riêng cho Khách hàng VIP</div>
+
+        <div class="voucher-card">
+            <div class="voucher-special">
+                <i class="ri-vip-crown-line mb-2"></i>
+                <span>VIP</span>
+            </div>
+            <div class="voucher-right">
+                <div class="voucher-value">Giảm 25%</div>
+                <div class="voucher-conditions">Cho đơn hàng phụ tùng</div>
+                <div class="voucher-validity">HSD: 31.05.2024</div>
+                <button class="save-btn">Lưu</button>
+            </div>
+        </div>
+
+        <div class="voucher-card">
+            <div class="voucher-special">
+                <i class="ri-shield-star-line mb-2"></i>
+                <span>MEMBERSHIP</span>
+            </div>
+            <div class="voucher-right">
+                <div class="voucher-value">Hoàn 10% xu</div>
+                <div class="voucher-conditions">Áp dụng mọi đơn hàng</div>
+                <div class="voucher-validity">HSD: 31.05.2024</div>
+                <button class="save-btn">Lưu</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="voucher-section mb-5">
+        <div class="section-title">
+            ƯU ĐÃI ĐỐI TÁC          
+        </div>
+        <div class="subtitle">Voucher từ các đối tác của i-LogiCare</div>
+
+        <div class="voucher-card">
+            <div class="voucher-brand">
+                <i class="ri-building-2-line mb-2"></i>
+                <span>BOSCH</span>
+            </div>
+            <div class="voucher-right">
+                <div class="voucher-value">Giảm 30%</div>
+                <div class="voucher-conditions">Cho sản phẩm Bosch</div>
+                <div class="voucher-validity">HSD: 31.05.2024</div>
+                <button class="save-btn">Lưu</button>
+            </div>
+        </div>
+
+        <div class="voucher-card">
+            <div class="voucher-brand">
+                <i class="ri-tools-line mb-2"></i>
+                <span>DENSO</span>
+            </div>
+            <div class="voucher-right">
+                <div class="voucher-value">Giảm 20%</div>
+                <div class="voucher-conditions">Cho phụ tùng Denso</div>
+                <div class="voucher-validity">HSD: 31.05.2024</div>
+                <button class="save-btn">Lưu</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Countdown Timer
+        function updateCountdown() {
+            const now = new Date();
+            const targetHour = now.getHours() < 12 ? 12 :
+                             now.getHours() < 15 ? 15 :
+                             now.getHours() < 17 ? 17 : 19;
+            
+            const target = new Date(now);
+            target.setHours(targetHour, 0, 0, 0);
+            
+            if (now > target && targetHour === 19) {
+                target.setDate(target.getDate() + 1);
+                target.setHours(12, 0, 0, 0);
+            }
+            
+            const diff = target - now;
+            const hours = Math.floor(diff / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+            
+            document.querySelector('.countdown').textContent = 
+                `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+
+        // Update countdown every second
+        setInterval(updateCountdown, 1000);
+        updateCountdown(); // Initial call
+
+        // Handle save button clicks
+        document.querySelectorAll('.save-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const originalText = this.textContent;
+                this.textContent = 'Đã Lưu';
+                this.style.background = 'gray';
+                this.disabled = true;
+                
+                // Show toast notification
+                const toast = document.createElement('div');
+                toast.className = 'toast-notification';
+                toast.textContent = 'Đã lưu voucher thành công!';
+                document.body.appendChild(toast);
+                
+                // Show the toast
+                requestAnimationFrame(() => {
+                    toast.classList.add('show');
+                });
+
+                // Hide and remove the toast
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                    setTimeout(() => toast.remove(), 300);
+                }, 2000);
+            });
+        });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Bước 4: Hoàn tất Đăng ký - i-LogiCare Mobile</title>
+    <link rel="icon" type="image/png" href="../images/car.png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.7.0/fonts/remixicon.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        :root {
+            --primary: #5AAF4B;
+            --primary-dark: #4a9c3d;
+            --primary-light: #7bc36e;
+            --secondary: #202D4A;
+            --accent: #FFC107;
+            --neutral-light: #F3F4F6;
+            --white: #FFFFFF;
+            --danger: #d0011b;
+            --success: #10B981;
+            --border-color: #E5E7EB;
+            --text-primary: #1F2937;
+            --text-secondary: #6B7280;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--neutral-light);
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+
+        .mobile-header {
+            background: var(--white);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+        }
+
+        .back-btn, .help-btn {
+            background: none;
+            border: none;
+            padding: 8px;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .back-btn { color: var(--primary); }
+        .help-btn { color: var(--text-secondary); font-size: 18px; }
+
+        .header-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            flex: 1;
+            text-align: center;
+            margin: 0 8px;
+        }
+
+        .progress-container {
+            background: var(--white);
+            padding: 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .step-text {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .step-count {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .progress-bar-wrapper {
+            background: #E5E7EB;
+            height: 6px;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: var(--primary);
+            height: 100%;
+            width: 100%;
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+
+        .main-content {
+            padding: 20px 16px 100px;
+        }
+
+        .section {
+            background: var(--white);
+            border-radius: 12px;
+            margin-bottom: 16px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .section-header {
+            padding: 16px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: var(--white);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .edit-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: var(--white);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .section-content {
+            padding: 20px 16px;
+        }
+
+        .info-grid {
+            display: grid;
+            gap: 12px;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            flex: 1;
+        }
+
+        .info-value {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+            text-align: right;
+            flex: 1;
+        }
+
+        .business-type-badge {
+            background: var(--primary);
+            color: var(--white);
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .doc-status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .doc-status.completed {
+            color: var(--success);
+        }
+
+        .terms-section {
+            background: var(--neutral-light);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .terms-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+
+        .terms-list {
+            list-style: none;
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .terms-list li {
+            margin-bottom: 8px;
+            padding-left: 16px;
+            position: relative;
+        }
+
+        .terms-list li::before {
+            content: "•";
+            color: var(--primary);
+            position: absolute;
+            left: 0;
+        }
+
+        .terms-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 16px;
+            background: var(--white);
+            border-radius: 8px;
+            border: 2px solid var(--border-color);
+            margin-bottom: 16px;
+            cursor: pointer;
+            transition: border-color 0.3s ease;
+        }
+
+        .checkbox-container:hover {
+            border-color: var(--primary-light);
+        }
+
+        .checkbox-container.checked {
+            border-color: var(--primary);
+            background: rgba(90, 175, 75, 0.02);
+        }
+
+        .checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border-color);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+
+        .checkbox-container.checked .checkbox {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: var(--white);
+        }
+
+        .checkbox-text {
+            font-size: 14px;
+            color: var(--text-primary);
+            line-height: 1.4;
+        }
+
+        .contract-section {
+            display: none;
+            margin-bottom: 16px;
+        }
+
+        .contract-section.show {
+            display: block;
+        }
+
+        .contract-preview {
+            background: var(--white);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .contract-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .contract-btn {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid var(--primary);
+            border-radius: 8px;
+            background: var(--white);
+            color: var(--primary);
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .contract-btn.primary {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--white);
+            border-top: 1px solid var(--border-color);
+            padding: 16px;
+            z-index: 100;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 14px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .loading {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .loading.show { display: flex; }
+
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid transparent;
+            border-top: 2px solid currentColor;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .success-screen {
+            display: none;
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .success-screen.show {
+            display: block;
+        }
+
+        .success-icon {
+            font-size: 80px;
+            color: var(--success);
+            margin-bottom: 20px;
+        }
+
+        .success-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+        }
+
+        .success-message {
+            font-size: 16px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 24px;
+        }
+
+        .success-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .success-btn {
+            padding: 14px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .success-btn.primary {
+            background: var(--primary);
+            color: var(--white);
+            border: none;
+        }
+
+        .success-btn.secondary {
+            background: var(--white);
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+    </style>
+</head>
+<body>
+    <div class="mobile-header">
+        <div class="header-content">
+            <button class="back-btn" id="backBtn">
+                <i class="ri-arrow-left-line"></i>
+            </button>
+            <h1 class="header-title">Đăng ký Người bán</h1>
+            <button class="help-btn">
+                <i class="ri-question-line"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="progress-container">
+        <div class="progress-info">
+            <span class="step-text">Hoàn tất Đăng ký</span>
+            <span class="step-count">Bước 4/4</span>
+        </div>
+        <div class="progress-bar-wrapper">
+            <div class="progress-fill"></div>
+        </div>
+    </div>
+
+    <div class="main-content" id="reviewContent">
+        <!-- Basic Information Review -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="ri-user-line"></i>
+                    Thông tin cơ bản
+                </h2>
+                <button class="edit-btn" onclick="editStep(1)">Sửa</button>
+            </div>
+            <div class="section-content">
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">Loại hình kinh doanh:</span>
+                        <span class="info-value">
+                            <span class="business-type-badge" id="businessTypeDisplay">Cá nhân</span>
+                        </span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Họ và tên:</span>
+                        <span class="info-value" id="fullNameDisplay">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Số điện thoại:</span>
+                        <span class="info-value" id="phoneDisplay">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Email:</span>
+                        <span class="info-value" id="emailDisplay">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Tên gian hàng:</span>
+                        <span class="info-value" id="shopNameDisplay">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Ngành hàng:</span>
+                        <span class="info-value" id="categoryDisplay">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Mã số thuế:</span>
+                        <span class="info-value" id="taxCodeDisplay">-</span>
+                    </div>
+                    <div class="info-item" id="companyNameItem" style="display: none;">
+                        <span class="info-label">Tên công ty:</span>
+                        <span class="info-value" id="companyNameDisplay">-</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payment & Warehouse Review -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="ri-bank-card-line"></i>
+                    Thanh toán & Kho hàng
+                </h2>
+                <button class="edit-btn" onclick="editStep(2)">Sửa</button>
+            </div>
+            <div class="section-content">
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">Phương thức thanh toán:</span>
+                        <span class="info-value" id="paymentMethodDisplay">-</span>
+                    </div>
+                    <div class="info-item" id="bankInfoItem">
+                        <span class="info-label">Ngân hàng:</span>
+                        <span class="info-value" id="bankDisplay">-</span>
+                    </div>
+                    <div class="info-item" id="accountInfoItem">
+                        <span class="info-label">Số tài khoản:</span>
+                        <span class="info-value" id="accountDisplay">-</span>
+                    </div>
+                    <div class="info-item" id="walletInfoItem" style="display: none;">
+                        <span class="info-label">Loại ví:</span>
+                        <span class="info-value" id="walletDisplay">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Địa chỉ kho hàng:</span>
+                        <span class="info-value" id="addressDisplay">-</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Documents Review -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="ri-file-check-line"></i>
+                    Giấy tờ & Xác thực
+                </h2>
+                <button class="edit-btn" onclick="editStep(3)">Sửa</button>
+            </div>
+            <div class="section-content">
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">CMND/CCCD:</span>
+                        <span class="info-value doc-status completed">
+                            <i class="ri-check-line"></i> Đã tải lên
+                        </span>
+                    </div>
+                    <div class="info-item" id="businessLicenseItem" style="display: none;">
+                        <span class="info-label">Giấy phép kinh doanh:</span>
+                        <span class="info-value doc-status completed">
+                            <i class="ri-check-line"></i> Đã tải lên
+                        </span>
+                    </div>
+                    <div class="info-item" id="authorizationItem" style="display: none;">
+                        <span class="info-label">Giấy ủy quyền:</span>
+                        <span class="info-value doc-status completed">
+                            <i class="ri-check-line"></i> Đã tải lên
+                        </span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Xác thực OTP:</span>
+                        <span class="info-value doc-status completed">
+                            <i class="ri-check-line"></i> Đã xác thực
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Terms and Conditions -->
+        <div class="terms-section">
+            <div class="terms-title">Điều khoản dịch vụ</div>
+            <ul class="terms-list">
+                <li>Tôi cam kết cung cấp thông tin chính xác và trung thực</li>
+                <li>Tôi đồng ý tuân thủ <a href="#" class="terms-link">Quy định và Điều khoản</a> của i-LogiCare</li>
+                <li>Tôi hiểu rằng mọi vi phạm có thể dẫn đến việc khóa tài khoản</li>
+                <li>Tôi đồng ý với <a href="#" class="terms-link">Chính sách bảo mật</a> thông tin cá nhân</li>
+                <li>Phí dịch vụ và hoa hồng sẽ được áp dụng theo <a href="#" class="terms-link">Bảng giá</a> hiện hành</li>
+            </ul>
+        </div>
+
+        <!-- Terms Acceptance -->
+        <div class="checkbox-container" id="termsCheckbox" onclick="toggleTerms()">
+            <div class="checkbox">
+                <i class="ri-check-line" style="display: none;"></i>
+            </div>
+            <div class="checkbox-text">
+                Tôi đã đọc và đồng ý với tất cả các điều khoản dịch vụ, chính sách bảo mật và quy định của i-LogiCare
+            </div>
+        </div>
+
+        <!-- Digital Contract Section (for business) -->
+        <div class="contract-section" id="contractSection">
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <i class="ri-file-text-line"></i>
+                        Hợp đồng điện tử
+                    </h2>
+                </div>
+                <div class="section-content">
+                    <div class="contract-preview">
+                        <h4>HỢP ĐỒNG CUNG CẤP DỊCH VỤ</h4>
+                        <p><strong>Bên A:</strong> Công ty TNHH i-LogiCare</p>
+                        <p><strong>Bên B:</strong> <span id="contractSellerName">Người bán</span></p>
+                        <br>
+                        <p><strong>Điều 1: Đối tượng hợp đồng</strong></p>
+                        <p>Bên A cung cấp nền tảng thương mại điện tử cho Bên B kinh doanh sản phẩm logistics và vận tải.</p>
+                        <br>
+                        <p><strong>Điều 2: Quyền và nghĩa vụ</strong></p>
+                        <p>2.1. Bên B cam kết cung cấp sản phẩm chất lượng, đúng mô tả</p>
+                        <p>2.2. Bên A hỗ trợ vận hành nền tảng và xử lý giao dịch</p>
+                        <p>2.3. Phí dịch vụ: 3-5% giá trị đơn hàng tùy theo loại sản phẩm</p>
+                        <br>
+                        <p><strong>Điều 3: Hiệu lực hợp đồng</strong></p>
+                        <p>Hợp đồng có hiệu lực từ ngày ký và được gia hạn tự động hàng năm.</p>
+                        <br>
+                        <p><em>Xem chi tiết hợp đồng đầy đủ tại đây...</em></p>
+                    </div>
+                    <div class="contract-actions">
+                        <button class="contract-btn" onclick="viewFullContract()">Xem đầy đủ</button>
+                        <button class="contract-btn primary" onclick="signContract()">Ký hợp đồng</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Screen -->
+    <div class="success-screen" id="successScreen">
+        <div class="success-icon">
+            <i class="ri-check-double-line"></i>
+        </div>
+        <h2 class="success-title">Đăng ký thành công!</h2>
+        <p class="success-message">
+            Chúc mừng! Tài khoản người bán của bạn đã được tạo thành công. 
+            Chúng tôi sẽ xem xét hồ sơ và phản hồi trong vòng 1-2 ngày làm việc.
+        </p>
+        <div class="success-actions">
+            <button class="success-btn primary" onclick="goToSellerCenter()">
+                <i class="ri-dashboard-line"></i>
+                Đến Seller Center
+            </button>
+            <button class="success-btn secondary" onclick="goToHome()">
+                <i class="ri-home-line"></i>
+                Về Trang chủ
+            </button>
+        </div>
+    </div>
+
+    <div class="bottom-nav" id="bottomNav">
+        <div class="nav-buttons">
+            <button class="btn btn-outline" id="backStepBtn">
+                <i class="ri-arrow-left-line"></i>
+                Quay lại
+            </button>
+            <button class="btn btn-primary" id="submitBtn" disabled>
+                <div class="loading" id="submitBtnLoading">
+                    <div class="spinner"></div>
+                    <span>Đang gửi...</span>
+                </div>
+                <div id="submitBtnText">
+                    Hoàn tất Đăng ký
+                    <i class="ri-check-line"></i>
+                </div>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const SUPABASE_URL = 'https://rowpswmsgomytqrkcdlt.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJvd3Bzd21zZ29teXRxcmtjZGx0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDcxMjEwODYsImV4cCI6MjA2MjY5NzA4Nn0.nbR_KVbpcVpSWBdkUGTdIJ9eLPFOemALJfLaT-AQa0I';
+        
+        let supabaseClientInstance = null;
+        let allFormData = {};
+        let termsAccepted = false;
+        let contractSigned = false;
+
+        try {
+            if (typeof window.supabase !== 'undefined') {
+                supabaseClientInstance = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            }
+        } catch (error) {
+            console.error("Error initializing Supabase:", error);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadAllFormData();
+            displayReviewData();
+            initializeButtonHandlers();
+        });
+
+        function loadAllFormData() {
+            // Load data from all previous steps
+            const step1Data = localStorage.getItem('sellerOnboarding_step1');
+            const step2Data = localStorage.getItem('sellerOnboarding_step2');
+            const step3Data = localStorage.getItem('sellerOnboarding_step3');
+
+            allFormData = {
+                step1: step1Data ? JSON.parse(step1Data) : {},
+                step2: step2Data ? JSON.parse(step2Data) : {},
+                step3: step3Data ? JSON.parse(step3Data) : {}
+            };
+        }
+
+        function displayReviewData() {
+            const { step1, step2, step3 } = allFormData;
+
+            // Display Step 1 data
+            if (step1) {
+                document.getElementById('businessTypeDisplay').textContent = getBusinessTypeText(step1.businessType);
+                document.getElementById('fullNameDisplay').textContent = step1.fullName || '-';
+                document.getElementById('phoneDisplay').textContent = step1.phone || '-';
+                document.getElementById('emailDisplay').textContent = step1.email || '-';
+                document.getElementById('shopNameDisplay').textContent = step1.shopName || '-';
+                document.getElementById('categoryDisplay').textContent = getCategoryText(step1.category);
+                document.getElementById('taxCodeDisplay').textContent = step1.taxCode || '-';
+                
+                if (step1.companyName) {
+                    document.getElementById('companyNameItem').style.display = 'flex';
+                    document.getElementById('companyNameDisplay').textContent = step1.companyName;
+                }
+
+                // Show contract section for business types
+                if (step1.businessType === 'company' || step1.businessType === 'official') {
+                    document.getElementById('contractSection').classList.add('show');
+                    document.getElementById('contractSellerName').textContent = step1.companyName || step1.fullName;
+                }
+
+                // Show required documents based on business type
+                if (step1.businessType !== 'individual') {
+                    document.getElementById('businessLicenseItem').style.display = 'flex';
+                }
+                if (step1.businessType === 'official') {
+                    document.getElementById('authorizationItem').style.display = 'flex';
+                }
+            }
+
+            // Display Step 2 data
+            if (step2) {
+                document.getElementById('paymentMethodDisplay').textContent = 
+                    step2.paymentMethod === 'bank' ? 'Tài khoản ngân hàng' : 'Ví điện tử';
+
+                if (step2.paymentMethod === 'bank') {
+                    document.getElementById('bankDisplay').textContent = getBankText(step2.bankName);
+                    document.getElementById('accountDisplay').textContent = 
+                        step2.accountNumber ? `***${step2.accountNumber.slice(-4)}` : '-';
+                } else {
+                    document.getElementById('bankInfoItem').style.display = 'none';
+                    document.getElementById('accountInfoItem').style.display = 'none';
+                    document.getElementById('walletInfoItem').style.display = 'flex';
+                    document.getElementById('walletDisplay').textContent = getWalletText(step2.walletType);
+                }
+
+                const address = [step2.detailAddress, getDistrictText(step2.district), getProvinceText(step2.province)]
+                    .filter(Boolean).join(', ');
+                document.getElementById('addressDisplay').textContent = address || '-';
+            }
+        }
+
+        function getBusinessTypeText(type) {
+            const types = {
+                'individual': 'Cá nhân',
+                'household': 'Hộ Kinh Doanh',
+                'company': 'Doanh Nghiệp',
+                'official': 'Official Store'
+            };
+            return types[type] || type;
+        }
+
+        function getCategoryText(category) {
+            const categories = {
+                'logistics': 'Logistics & Vận tải',
+                'parts': 'Phụ tùng & Linh kiện',
+                'services': 'Dịch vụ bảo dưỡng',
+                'tools': 'Dụng cụ & Thiết bị',
+                'other': 'Khác'
+            };
+            return categories[category] || category;
+        }
+
+        function getBankText(bank) {
+            const banks = {
+                'vietcombank': 'Vietcombank',
+                'techcombank': 'Techcombank',
+                'bidv': 'BIDV',
+                'vietinbank': 'VietinBank',
+                'agribank': 'Agribank',
+                'acb': 'ACB',
+                'mb': 'MB Bank',
+                'tpbank': 'TPBank',
+                'sacombank': 'Sacombank'
+            };
+            return banks[bank] || 'Khác';
+        }
+
+        function getWalletText(wallet) {
+            const wallets = {
+                'momo': 'MoMo',
+                'zalopay': 'ZaloPay',
+                'viettelpay': 'ViettelPay',
+                'vnpay': 'VNPay'
+            };
+            return wallets[wallet] || 'Khác';
+        }
+
+        function getProvinceText(province) {
+            const provinces = {
+                'hanoi': 'Hà Nội',
+                'hcm': 'TP. Hồ Chí Minh',
+                'danang': 'Đà Nẵng'
+            };
+            return provinces[province] || province;
+        }
+
+        function getDistrictText(district) {
+            // Simplified - in real app, you'd have full mapping
+            return district ? district.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase()) : '';
+        }
+
+        function toggleTerms() {
+            const checkbox = document.getElementById('termsCheckbox');
+            const checkIcon = checkbox.querySelector('.ri-check-line');
+            
+            termsAccepted = !termsAccepted;
+            
+            if (termsAccepted) {
+                checkbox.classList.add('checked');
+                checkIcon.style.display = 'block';
+            } else {
+                checkbox.classList.remove('checked');
+                checkIcon.style.display = 'none';
+            }
+            
+            updateSubmitButton();
+        }
+
+        function updateSubmitButton() {
+            const submitBtn = document.getElementById('submitBtn');
+            const isBusinessType = allFormData.step1?.businessType === 'company' || allFormData.step1?.businessType === 'official';
+            
+            if (isBusinessType) {
+                submitBtn.disabled = !(termsAccepted && contractSigned);
+            } else {
+                submitBtn.disabled = !termsAccepted;
+            }
+        }
+
+        function viewFullContract() {
+            // In real app, this would open a full contract viewer
+            alert('Chức năng xem hợp đồng đầy đủ sẽ được cung cấp trong phiên bản chính thức.');
+        }
+
+        function signContract() {
+            // Simulate OTP verification for contract signing
+            const otp = prompt('Nhập mã OTP để ký hợp đồng điện tử:');
+            if (otp === '123456') {
+                contractSigned = true;
+                alert('Hợp đồng đã được ký thành công!');
+                
+                // Update contract button
+                const signBtn = document.querySelector('.contract-btn.primary');
+                signBtn.innerHTML = '<i class="ri-check-line"></i> Đã ký';
+                signBtn.disabled = true;
+                signBtn.style.opacity = '0.7';
+                
+                updateSubmitButton();
+            } else {
+                alert('Mã OTP không chính xác!');
+            }
+        }
+
+        function editStep(stepNumber) {
+            const pages = [
+                '',
+                'SellerInfoBasicScreen.html',
+                'PaymentWarehouseScreen.html',
+                'LegalDocsScreen.html'
+            ];
+            
+            if (pages[stepNumber]) {
+                window.location.href = pages[stepNumber];
+            }
+        }
+
+        function initializeButtonHandlers() {
+            document.getElementById('backBtn').addEventListener('click', function() {
+                if (confirm('Bạn có chắc muốn quay lại? Dữ liệu đã nhập sẽ được lưu tạm thời.')) {
+                    window.location.href = '../index.html';
+                }
+            });
+
+            document.getElementById('backStepBtn').addEventListener('click', function() {
+                window.location.href = 'LegalDocsScreen.html';
+            });
+
+            document.getElementById('submitBtn').addEventListener('click', function() {
+                submitRegistration();
+            });
+        }
+
+        async function submitRegistration() {
+            const submitBtn = document.getElementById('submitBtn');
+            const loading = document.getElementById('submitBtnLoading');
+            const btnText = document.getElementById('submitBtnText');
+
+            // Show loading state
+            loading.classList.add('show');
+            btnText.style.display = 'none';
+            submitBtn.disabled = true;
+
+            try {
+                // Prepare seller data for Supabase
+                const sellerData = prepareFinalSellerData();
+                
+                // Submit to Supabase
+                await submitToSupabase(sellerData);
+                
+                // Show success screen
+                showSuccessScreen();
+                
+                // Clean up temporary data
+                clearTempStorage();
+                
+            } catch (error) {
+                console.error('Submission error:', error);
+                alert('Có lỗi xảy ra khi gửi thông tin. Vui lòng thử lại!');
+                
+                // Reset button state
+                loading.classList.remove('show');
+                btnText.style.display = 'flex';
+                submitBtn.disabled = false;
+            }
+        }
+
+        function prepareFinalSellerData() {
+            const { step1, step2, step3 } = allFormData;
+            
+            return {
+                // Basic info
+                business_type: step1.businessType,
+                full_name: step1.fullName,
+                phone: step1.phone,
+                email: step1.email,
+                shop_name: step1.shopName,
+                category: step1.category,
+                tax_code: step1.taxCode,
+                company_name: step1.companyName || null,
+                
+                // Payment info
+                payment_method: step2.paymentMethod,
+                bank_name: step2.bankName || null,
+                account_number: step2.accountNumber || null,
+                account_holder: step2.accountHolder || null,
+                wallet_type: step2.walletType || null,
+                wallet_phone: step2.walletPhone || null,
+                wallet_owner: step2.walletOwner || null,
+                
+                // Address info
+                province: step2.province,
+                district: step2.district,
+                detail_address: step2.detailAddress,
+                warehouse_note: step2.warehouseNote || null,
+                
+                // Status
+                status: 'pending_review',
+                terms_accepted: termsAccepted,
+                contract_signed: contractSigned,
+                created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString()
+            };
+        }
+
+        async function submitToSupabase(sellerData) {
+            if (!supabaseClientInstance) {
+                // Simulate submission for development
+                console.log('Simulating Supabase submission:', sellerData);
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                return;
+            }
+
+            const { data, error } = await supabaseClientInstance
+                .from('sellers')
+                .insert([sellerData]);
+
+            if (error) {
+                throw error;
+            }
+
+            return data;
+        }
+
+        function showSuccessScreen() {
+            document.getElementById('reviewContent').style.display = 'none';
+            document.getElementById('bottomNav').style.display = 'none';
+            document.getElementById('successScreen').classList.add('show');
+        }
+
+        function clearTempStorage() {
+            localStorage.removeItem('sellerOnboarding_step1');
+            localStorage.removeItem('sellerOnboarding_step2');
+            localStorage.removeItem('sellerOnboarding_step3');
+        }
+
+        function goToSellerCenter() {
+            // In real app, navigate to seller center
+            alert('Chuyển đến Seller Center...');
+            window.location.href = '../index.html';
+        }
+
+        function goToHome() {
+            window.location.href = '../index.html';
+        }
+    </script>
+</body>
+</html> 

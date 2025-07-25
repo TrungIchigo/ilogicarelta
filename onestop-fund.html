@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Quỹ OneStop@LTA - i-LogiCare</title>
+    <link rel="icon" type="image/png" href="../images/car.png">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts (Inter) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Remix Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.7.0/fonts/remixicon.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #5AAF4B;
+            --primary-dark: #4a9c3d;
+            --primary-light: #7bc36e;
+            --secondary: #202D4A;
+            --white: #FFFFFF;
+            --neutral-light: #F3F4F6;
+            --border-color: #E5E7EB;
+            --text-dark: #111827;
+            --bottom-nav-height: 60px;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--neutral-light);
+            margin: 0;
+            padding: 0;
+            padding-bottom: var(--bottom-nav-height);
+        }
+
+        /* Header Styles */
+        .fund-header {
+            background: var(--primary);
+            color: white;
+            padding: 20px 16px;
+            position: relative;
+        }
+
+        .header-top {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .back-button {
+            color: white;
+            text-decoration: none;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            margin-right: 12px;
+        }
+
+        .header-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin: 0;
+            flex-grow: 1;
+        }
+
+        .balance-section {
+            margin-bottom: 16px;
+        }
+
+        .balance-label {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 4px;
+        }
+
+        .balance-amount {
+            font-size: 24px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Quick Actions Grid */
+        .quick-actions {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 10px 16px 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .actions-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            text-align: center;
+        }
+
+        .action-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: var(--text-dark);
+        }
+
+        .action-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--neutral-light);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px;
+            color: var(--primary);
+            font-size: 24px;
+        }
+
+        .action-text {
+            font-size: 12px;
+            line-height: 1.2;
+        }
+
+        /* Features Section */
+        .features-section {
+            background: white;
+            margin: 16px;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            text-decoration: none;
+            color: var(--text-dark);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .feature-item:last-child {
+            border-bottom: none;
+        }
+
+        .feature-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--neutral-light);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            color: var(--primary);
+            font-size: 20px;
+        }
+
+        .feature-content {
+            flex: 1;
+        }
+
+        .feature-title {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .feature-description {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .feature-badge {
+            background: var(--primary);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        /* Promotional Banner */
+        .promo-banner {
+            margin: 16px;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .promo-banner img {
+            width: 100%;
+            height: auto;
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0;
+            border-top: 1px solid var(--border-color);
+            height: var(--bottom-nav-height);
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: var(--text-dark);
+            font-size: 12px;
+        }
+
+        .nav-item i {
+            font-size: 24px;
+            margin-bottom: 4px;
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+        }
+
+        .promo-banner {            
+            position: fixed;
+            bottom: 5px;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+
+        /* Add these styles to your existing CSS */
+        .toggle-balance-btn {
+            background: none;
+            border: none;
+            color: white;
+            padding: 0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        .toggle-balance-btn:focus {
+            outline: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="fund-header">
+        <div class="header-top">
+            <a href="index.html" class="back-button">
+                <i class="ri-arrow-left-line"></i>
+            </a>
+            <h1 class="header-title">OneStop@LTA</h1>
+        </div>
+        <div class="balance-section">
+            <div class="balance-label">Tổng số dư</div>
+            <div class="balance-amount">
+                <span id="balance-display">*********</span>
+                <button onclick="toggleBalance()" class="toggle-balance-btn">
+                    <i id="eye-icon" class="ri-eye-off-line"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+        <div class="actions-grid">
+            <a href="#" class="action-item">
+                <div class="action-icon">
+                    <i class="ri-add-line"></i>
+                </div>
+                <span class="action-text">Nạp tiền</span>
+            </a>
+            <a href="#" class="action-item">
+                <div class="action-icon">
+                    <i class="ri-exchange-line"></i>
+                </div>
+                <span class="action-text">Chuyển tiền</span>
+            </a>
+            <a href="#" class="action-item">
+                <div class="action-icon">
+                    <i class="ri-qr-code-line"></i>
+                </div>
+                <span class="action-text">QR Nhận tiền</span>
+            </a>
+            <a href="#" class="action-item">
+                <div class="action-icon">
+                    <i class="ri-coupon-2-line"></i>
+                </div>
+                <span class="action-text">Ưu đãi</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="features-section">
+        <a href="#" class="feature-item">
+            <div class="feature-icon">
+                <i class="ri-download-2-line"></i>
+            </div>
+            <div class="feature-content">
+                <div class="feature-title">Tải App i-SuperApp@LTA</div>
+                <div class="feature-description">Nhận ngay 100K khi tải app</div>
+            </div>
+            <div class="feature-badge">Nhận 100K</div>
+        </a>
+        
+        <a href="#" class="feature-item">
+            <div class="feature-icon">
+                <i class="ri-bank-card-line"></i>
+            </div>
+            <div class="feature-content">
+                <div class="feature-title">Liên Kết Ngân Hàng</div>
+                <div class="feature-description">Nạp tiền dễ dàng</div>
+            </div>
+        </a>
+        <a href="#" class="feature-item">
+            <div class="feature-icon">
+                <i class="ri-shopping-bag-line"></i>
+            </div>
+            <div class="feature-content">
+                <div class="feature-title">Mua Hàng</div>
+                <div class="feature-description">Thanh toán với Quỹ OneStop@LTA</div>
+            </div>
+        </a>
+    </div>
+
+    <!-- Promotional Banner -->
+    <div class="promo-banner">
+        <img src="images/promo_banner.jpg" alt="Khuyến mãi">
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        let isBalanceVisible = false;
+        const balanceAmount = 500000;
+
+        function toggleBalance() {
+            const balanceDisplay = document.getElementById('balance-display');
+            const eyeIcon = document.getElementById('eye-icon');
+            isBalanceVisible = !isBalanceVisible;
+
+            if (isBalanceVisible) {
+                balanceDisplay.textContent = new Intl.NumberFormat('vi-VN', {
+                    style: 'currency',
+                    currency: 'VND'
+                }).format(balanceAmount);
+                eyeIcon.className = 'ri-eye-line';
+            } else {
+                balanceDisplay.textContent = '*********';
+                eyeIcon.className = 'ri-eye-off-line';
+            }
+        }
+    </script>
+</body>
+</html> 

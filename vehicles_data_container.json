@@ -1,0 +1,107 @@
+{
+    "brands": [
+      { "id": "hino", "name": "Hino" },
+      { "id": "howo", "name": "Howo (Sinotruk)" },
+      { "id": "dongfeng", "name": "Dongfeng" },
+      { "id": "isuzu", "name": "Isuzu" },
+      { "id": "fuso", "name": "Fuso (Mitsubishi)" },
+      { "id": "hyundai", "name": "Hyundai" },
+      { "id": "chenglong", "name": "Chenglong (Hải Âu)" },
+      { "id": "jac", "name": "JAC" },
+      { "id": "faw", "name": "FAW" },
+      { "id": "shacman", "name": "Shacman" }
+    ],
+    "models": {
+      "hino": [
+        { "id": "hino700", "name": "Hino 700 Series (Đầu kéo)" },
+        { "id": "hino500", "name": "Hino 500 Series (Tải nặng)" }
+      ],
+      "howo": [
+        { "id": "howoa7", "name": "Howo A7 (Đầu kéo)" },
+        { "id": "howot7h", "name": "Howo T7H (Đầu kéo)" },
+        { "id": "howo380", "name": "Howo 380HP (Ben/Tải)" }
+      ],
+      "dongfeng": [{ "id": "dfhoanghuy", "name": "Dongfeng Hoàng Huy (Đầu kéo/Tải)" }],
+      "isuzu": [{ "id": "isuzugiga", "name": "Isuzu Giga Series (Đầu kéo/Tải)" }],
+      "fuso": [{ "id": "fusofj", "name": "Fuso FJ Series (Tải nặng)" }],
+      "hyundai": [{ "id": "hyundaixcient", "name": "Hyundai Xcient (Đầu kéo)" }],
+      "chenglong": [{ "id": "chenglongh7", "name": "Chenglong H7 (Đầu kéo)" }],
+      "jac": [{ "id": "jack5", "name": "JAC K5 (Đầu kéo)" }],
+      "faw": [{ "id": "fawjh6", "name": "FAW JH6 (Đầu kéo)" }],
+      "shacman": [{ "id": "shacmanx3000", "name": "Shacman X3000 (Đầu kéo)" }]
+    },
+    "years": {
+      "hino700": [2020, 2021, 2022, 2023, 2024],
+      "hino500": [2019, 2020, 2021, 2022, 2023],
+      "howoa7": [2019, 2020, 2021, 2022],
+      "howot7h": [2021, 2022, 2023, 2024],
+      "howo380": [2018, 2019, 2020],
+      "dfhoanghuy": [2020, 2021, 2022],
+      "isuzugiga": [2021, 2022, 2023],
+      "fusofj": [2019, 2020, 2021],
+      "hyundaixcient": [2022, 2023, 2024],
+      "chenglongh7": [2020, 2021, 2022],
+      "jack5": [2019, 2020, 2021],
+      "fawjh6": [2021, 2022, 2023],
+      "shacmanx3000": [2020, 2021, 2022]
+    },
+    "trims": {
+      "hino700|2022": [{ "id": "ss1ekv", "name": "Đầu kéo 2 cầu (SS1EKV)" }, { "id": "sh1eev", "name": "Đầu kéo 1 cầu (SH1EEV)" }],
+      "hino500|2021": [{ "id": "fg8jt7a", "name": "Thùng dài 9.8m (FG8JT7A)" }, { "id": "fl8jw7a", "name": "3 chân, thùng 9.4m (FL8JW7A)" }],
+      "howoa7|2020": [{ "id": "420hp", "name": "Đầu kéo A7 420HP" }, { "id": "380hp", "name": "Đầu kéo A7 380HP" }],
+      "howot7h|2023": [{ "id": "440hp", "name": "Đầu kéo T7H 440HP Cầu Láp" }, { "id": "460hp", "name": "Đầu kéo T7H 460HP Cầu Dầu" }]
+    },
+    "container_types": {
+      "hino700|2022|ss1ekv": [
+        { "id": "cont20ft", "name": "Container 20ft (Thường/Khô)" },
+        { "id": "cont40ft", "name": "Container 40ft (Thường/Khô)" },
+        { "id": "cont40hc", "name": "Container 40ft HC (Cao)" },
+        { "id": "cont45hc", "name": "Container 45ft HC (Cao)" },
+        { "id": "contlanh20", "name": "Container Lạnh 20ft" },
+        { "id": "contlanh40", "name": "Container Lạnh 40ft" }
+      ],
+      "howoa7|2020|420hp": [
+        { "id": "cont20ft", "name": "Container 20ft (Thường/Khô)" },
+        { "id": "cont40ft", "name": "Container 40ft (Thường/Khô)" },
+        { "id": "cont40hc", "name": "Container 40ft HC (Cao)" }
+      ]
+    },
+    "capacities": {
+      "hino700|2022|ss1ekv|cont40ft": [
+        { "id": "cap30t", "name": "Kéo Sơ mi rơ moóc đến 30 tấn" },
+        { "id": "cap38t", "name": "Kéo Sơ mi rơ moóc đến 38.5 tấn" }
+      ],
+      "howoa7|2020|420hp|cont40hc": [
+        { "id": "cap30t", "name": "Kéo Sơ mi rơ moóc đến 30 tấn" },
+        { "id": "cap39t", "name": "Kéo Sơ mi rơ moóc đến 39 tấn" }
+      ]
+    },
+    "specs": {
+      "hino700|2022|ss1ekv|cont40ft|cap38t": {
+        "config_code": "H700-SS1EKV-22-C40-38T",
+        "engine": "E13C-UV (Euro 5)",
+        "displacement_cc": "12,913",
+        "max_power_ps_rpm": "420 / 1,800",
+        "max_torque_nm_rpm": "1,765 / 1,100",
+        "transmission": "FAST 12JSD180TA (12 số tiến, 2 số lùi)",
+        "overall_dimensions_mm": "6,860 x 2,490 x 3,590",
+        "wheelbase_mm": "3,300 + 1,310",
+        "gross_vehicle_weight_kg": "24,000 (Thiết kế) / 38,550 (Kéo theo)",
+        "fuel_tank_capacity_l": "400",
+        "tire_size": "11.00R20 hoặc 12R22.5"
+      },
+      "howoa7|2020|420hp|cont40hc|cap39t": {
+        "config_code": "HOWOA7-420-20-C40HC-39T",
+        "engine": "D12.42-50 (Euro 5)",
+        "displacement_cc": "11,596",
+        "max_power_ps_rpm": "420 / 2,000",
+        "max_torque_nm_rpm": "1,820 / 1,100-1,400",
+        "transmission": "HW25712XSTL (12 số tiến, 2 số lùi)",
+        "overall_dimensions_mm": "6,985 x 2,496 x 3,850",
+        "wheelbase_mm": "3,200 + 1,350",
+        "gross_vehicle_weight_kg": "25,000 (Thiết kế) / 39,000 (Kéo theo)",
+        "fuel_tank_capacity_l": "600 (Nhôm)",
+        "tire_size": "12.00R20"
+      }
+    }
+  }

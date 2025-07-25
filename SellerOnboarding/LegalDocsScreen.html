@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Bước 3: Giấy tờ & Xác thực - i-LogiCare Mobile</title>
+    <link rel="icon" type="image/png" href="../images/car.png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.7.0/fonts/remixicon.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        :root {
+            --primary: #5AAF4B;
+            --primary-dark: #4a9c3d;
+            --primary-light: #7bc36e;
+            --secondary: #202D4A;
+            --accent: #FFC107;
+            --neutral-light: #F3F4F6;
+            --white: #FFFFFF;
+            --danger: #d0011b;
+            --success: #10B981;
+            --border-color: #E5E7EB;
+            --text-primary: #1F2937;
+            --text-secondary: #6B7280;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--neutral-light);
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+
+        .mobile-header {
+            background: var(--white);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+        }
+
+        .back-btn, .help-btn {
+            background: none;
+            border: none;
+            padding: 8px;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .back-btn { color: var(--primary); }
+        .help-btn { color: var(--text-secondary); font-size: 18px; }
+
+        .header-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            flex: 1;
+            text-align: center;
+            margin: 0 8px;
+        }
+
+        .progress-container {
+            background: var(--white);
+            padding: 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .step-text {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .step-count {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .progress-bar-wrapper {
+            background: #E5E7EB;
+            height: 6px;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: var(--primary);
+            height: 100%;
+            width: 75%;
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+
+        .main-content {
+            padding: 20px 16px 100px;
+        }
+
+        .section {
+            background: var(--white);
+            border-radius: 12px;
+            margin-bottom: 16px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .section-header {
+            padding: 16px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: var(--white);
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-content {
+            padding: 20px 16px;
+        }
+
+        .doc-upload {
+            border: 2px dashed var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 16px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .doc-upload:hover {
+            border-color: var(--primary-light);
+            background: rgba(90, 175, 75, 0.02);
+        }
+
+        .doc-upload.has-file {
+            border-color: var(--success);
+            background: rgba(16, 185, 129, 0.05);
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+        }
+
+        .doc-upload.has-file .upload-icon {
+            color: var(--success);
+        }
+
+        .upload-text {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .upload-hint {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .upload-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+            justify-content: center;
+        }
+
+        .upload-btn {
+            padding: 8px 16px;
+            border: 1px solid var(--primary);
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .upload-btn.primary {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .upload-btn.secondary {
+            background: var(--white);
+            color: var(--primary);
+        }
+
+        .doc-preview {
+            display: none;
+            margin-top: 12px;
+        }
+
+        .doc-preview.show {
+            display: block;
+        }
+
+        .preview-image {
+            width: 100%;
+            max-width: 200px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .preview-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+            justify-content: center;
+        }
+
+        .preview-btn {
+            padding: 4px 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            background: var(--white);
+            color: var(--text-primary);
+        }
+
+        .preview-btn.delete {
+            color: var(--danger);
+            border-color: var(--danger);
+        }
+
+        .doc-requirements {
+            background: var(--neutral-light);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 12px;
+        }
+
+        .req-title {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+        }
+
+        .req-list {
+            list-style: none;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .req-list li {
+            margin-bottom: 2px;
+        }
+
+        .req-list li::before {
+            content: "• ";
+            color: var(--primary);
+            margin-right: 4px;
+        }
+
+        .otp-section {
+            margin-top: 24px;
+            display: none;
+        }
+
+        .otp-section.show {
+            display: block;
+        }
+
+        .otp-input-container {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin: 16px 0;
+        }
+
+        .otp-input {
+            width: 50px;
+            height: 50px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .otp-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .otp-timer {
+            text-align: center;
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin: 8px 0;
+        }
+
+        .resend-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background: transparent;
+            border: 1px solid var(--primary);
+            border-radius: 8px;
+            color: var(--primary);
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 12px;
+        }
+
+        .resend-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--white);
+            border-top: 1px solid var(--border-color);
+            padding: 16px;
+            z-index: 100;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 14px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .loading {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .loading.show { display: flex; }
+
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid transparent;
+            border-top: 2px solid currentColor;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .hidden { display: none; }
+
+        .accordion-toggle {
+            width: 100%;
+            background: none;
+            border: none;
+            padding: 16px;
+            text-align: left;
+            cursor: pointer;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .accordion-toggle:hover {
+            background: rgba(90, 175, 75, 0.02);
+        }
+
+        .accordion-content {
+            display: none;
+            padding: 16px;
+        }
+
+        .accordion-content.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="mobile-header">
+        <div class="header-content">
+            <button class="back-btn" id="backBtn">
+                <i class="ri-arrow-left-line"></i>
+            </button>
+            <h1 class="header-title">Đăng ký Người bán</h1>
+            <button class="help-btn">
+                <i class="ri-question-line"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="progress-container">
+        <div class="progress-info">
+            <span class="step-text">Giấy tờ & Xác thực</span>
+            <span class="step-count">Bước 3/4</span>
+        </div>
+        <div class="progress-bar-wrapper">
+            <div class="progress-fill"></div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <!-- CMND/CCCD Section -->
+        <div class="section">
+            <button class="accordion-toggle" onclick="toggleAccordion('idCard')">
+                <div class="section-title">
+                    <i class="ri-id-card-line"></i>
+                    CMND/CCCD
+                    <span style="margin-left: auto; font-size: 12px;" id="idCardStatus">Bắt buộc</span>
+                </div>
+            </button>
+            <div class="accordion-content show" id="idCardContent">
+                <div class="doc-upload" id="idCardUpload" onclick="selectUploadMethod('idCard')">
+                    <div class="upload-icon">
+                        <i class="ri-image-add-line"></i>
+                    </div>
+                    <div class="upload-text">Tải lên CMND/CCCD</div>
+                    <div class="upload-hint">Chạm để chọn ảnh hoặc chụp ảnh mới</div>
+                    <div class="upload-actions">
+                        <button class="upload-btn primary">
+                            <i class="ri-camera-line"></i> Chụp ảnh
+                        </button>
+                        <button class="upload-btn secondary">
+                            <i class="ri-image-line"></i> Chọn ảnh
+                        </button>
+                    </div>
+                </div>
+                <div class="doc-preview" id="idCardPreview">
+                    <img class="preview-image" id="idCardImage" alt="CMND/CCCD Preview">
+                    <div class="preview-actions">
+                        <button class="preview-btn" onclick="viewFullImage('idCard')">Xem</button>
+                        <button class="preview-btn delete" onclick="removeDocument('idCard')">Xóa</button>
+                    </div>
+                </div>
+                <div class="doc-requirements">
+                    <div class="req-title">Yêu cầu:</div>
+                    <ul class="req-list">
+                        <li>Ảnh rõ nét, không bị mờ</li>
+                        <li>Đầy đủ 4 góc của giấy tờ</li>
+                        <li>Thông tin phải đọc được rõ ràng</li>
+                        <li>Định dạng: JPG, PNG (dưới 5MB)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Business License Section -->
+        <div class="section" id="businessLicenseSection" style="display: none;">
+            <button class="accordion-toggle" onclick="toggleAccordion('businessLicense')">
+                <div class="section-title">
+                    <i class="ri-file-text-line"></i>
+                    Giấy phép kinh doanh
+                    <span style="margin-left: auto; font-size: 12px;" id="businessLicenseStatus">Bắt buộc</span>
+                </div>
+            </button>
+            <div class="accordion-content" id="businessLicenseContent">
+                <div class="doc-upload" id="businessLicenseUpload" onclick="selectUploadMethod('businessLicense')">
+                    <div class="upload-icon">
+                        <i class="ri-image-add-line"></i>
+                    </div>
+                    <div class="upload-text">Tải lên Giấy phép kinh doanh</div>
+                    <div class="upload-hint">Chạm để chọn ảnh hoặc chụp ảnh mới</div>
+                    <div class="upload-actions">
+                        <button class="upload-btn primary">
+                            <i class="ri-camera-line"></i> Chụp ảnh
+                        </button>
+                        <button class="upload-btn secondary">
+                            <i class="ri-image-line"></i> Chọn ảnh
+                        </button>
+                    </div>
+                </div>
+                <div class="doc-preview" id="businessLicensePreview">
+                    <img class="preview-image" id="businessLicenseImage" alt="Giấy phép kinh doanh Preview">
+                    <div class="preview-actions">
+                        <button class="preview-btn" onclick="viewFullImage('businessLicense')">Xem</button>
+                        <button class="preview-btn delete" onclick="removeDocument('businessLicense')">Xóa</button>
+                    </div>
+                </div>
+                <div class="doc-requirements">
+                    <div class="req-title">Yêu cầu:</div>
+                    <ul class="req-list">
+                        <li>Giấy phép còn hiệu lực</li>
+                        <li>Ảnh rõ nét, đầy đủ thông tin</li>
+                        <li>Tên doanh nghiệp phải trùng khớp</li>
+                        <li>Định dạng: JPG, PNG (dưới 5MB)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Authorization Section -->
+        <div class="section" id="authorizationSection" style="display: none;">
+            <button class="accordion-toggle" onclick="toggleAccordion('authorization')">
+                <div class="section-title">
+                    <i class="ri-award-line"></i>
+                    Giấy ủy quyền thương hiệu
+                    <span style="margin-left: auto; font-size: 12px;" id="authorizationStatus">Bắt buộc</span>
+                </div>
+            </button>
+            <div class="accordion-content" id="authorizationContent">
+                <div class="doc-upload" id="authorizationUpload" onclick="selectUploadMethod('authorization')">
+                    <div class="upload-icon">
+                        <i class="ri-image-add-line"></i>
+                    </div>
+                    <div class="upload-text">Tải lên Giấy ủy quyền</div>
+                    <div class="upload-hint">Chạm để chọn ảnh hoặc chụp ảnh mới</div>
+                    <div class="upload-actions">
+                        <button class="upload-btn primary">
+                            <i class="ri-camera-line"></i> Chụp ảnh
+                        </button>
+                        <button class="upload-btn secondary">
+                            <i class="ri-image-line"></i> Chọn ảnh
+                        </button>
+                    </div>
+                </div>
+                <div class="doc-preview" id="authorizationPreview">
+                    <img class="preview-image" id="authorizationImage" alt="Giấy ủy quyền Preview">
+                    <div class="preview-actions">
+                        <button class="preview-btn" onclick="viewFullImage('authorization')">Xem</button>
+                        <button class="preview-btn delete" onclick="removeDocument('authorization')">Xóa</button>
+                    </div>
+                </div>
+                <div class="doc-requirements">
+                    <div class="req-title">Yêu cầu:</div>
+                    <ul class="req-list">
+                        <li>Giấy ủy quyền hợp lệ</li>
+                        <li>Có chữ ký và con dấu rõ ràng</li>
+                        <li>Thông tin thương hiệu chính xác</li>
+                        <li>Định dạng: JPG, PNG (dưới 5MB)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- OTP Verification Section -->
+        <div class="section otp-section" id="otpSection">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="ri-shield-check-line"></i>
+                    Xác thực OTP
+                </h2>
+            </div>
+            <div class="section-content">
+                <div style="text-align: center; margin-bottom: 16px;">
+                    <p>Mã xác thực đã được gửi đến số điện thoại:</p>
+                    <strong id="phoneDisplay"></strong>
+                </div>
+                <div class="otp-input-container">
+                    <input type="text" class="otp-input" maxlength="1" id="otp1">
+                    <input type="text" class="otp-input" maxlength="1" id="otp2">
+                    <input type="text" class="otp-input" maxlength="1" id="otp3">
+                    <input type="text" class="otp-input" maxlength="1" id="otp4">
+                    <input type="text" class="otp-input" maxlength="1" id="otp5">
+                    <input type="text" class="otp-input" maxlength="1" id="otp6">
+                </div>
+                <div class="otp-timer" id="otpTimer">Mã hết hạn sau: <span id="countdown">120</span>s</div>
+                <button class="resend-btn" id="resendBtn" disabled>Gửi lại mã OTP</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="bottom-nav">
+        <div class="nav-buttons">
+            <button class="btn btn-outline" id="backStepBtn">
+                <i class="ri-arrow-left-line"></i>
+                Quay lại
+            </button>
+            <button class="btn btn-primary" id="nextBtn" disabled>
+                <div class="loading" id="nextBtnLoading">
+                    <div class="spinner"></div>
+                    <span>Đang xử lý...</span>
+                </div>
+                <div id="nextBtnText">
+                    Tiếp tục
+                    <i class="ri-arrow-right-line"></i>
+                </div>
+            </button>
+        </div>
+    </div>
+
+    <input type="file" id="fileInput" class="hidden" accept="image/*">
+    <input type="file" id="cameraInput" class="hidden" accept="image/*" capture="environment">
+
+    <script>
+        const SUPABASE_URL = 'https://rowpswmsgomytqrkcdlt.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJvd3Bzd21zZ29teXRxcmtjZGx0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDcxMjEwODYsImV4cCI6MjA2MjY5NzA4Nn0.nbR_KVbpcVpSWBdkUGTdIJ9eLPFOemALJfLaT-AQa0I';
+        
+        let supabaseClientInstance = null;
+        let currentUploadType = null;
+        let uploadedFiles = {};
+        let otpTimer = null;
+        let otpCountdown = 120;
+        let businessType = 'individual';
+
+        try {
+            if (typeof window.supabase !== 'undefined') {
+                supabaseClientInstance = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            }
+        } catch (error) {
+            console.error("Error initializing Supabase:", error);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeFromPreviousSteps();
+            initializeFileInputs();
+            initializeOTPInputs();
+            initializeButtonHandlers();
+            restoreFromTempStorage();
+        });
+
+        function initializeFromPreviousSteps() {
+            const step1Data = localStorage.getItem('sellerOnboarding_step1');
+            if (step1Data) {
+                const formData = JSON.parse(step1Data);
+                businessType = formData.businessType || 'individual';
+                
+                // Show/hide sections based on business type
+                if (businessType === 'household' || businessType === 'company' || businessType === 'official') {
+                    document.getElementById('businessLicenseSection').style.display = 'block';
+                }
+                
+                if (businessType === 'official') {
+                    document.getElementById('authorizationSection').style.display = 'block';
+                }
+
+                // Display phone number for OTP
+                document.getElementById('phoneDisplay').textContent = formData.phone || 'Số điện thoại đã đăng ký';
+            }
+        }
+
+        function initializeFileInputs() {
+            const fileInput = document.getElementById('fileInput');
+            const cameraInput = document.getElementById('cameraInput');
+
+            fileInput.addEventListener('change', handleFileSelect);
+            cameraInput.addEventListener('change', handleFileSelect);
+        }
+
+        function selectUploadMethod(docType) {
+            currentUploadType = docType;
+            
+            // Show action sheet or use event delegation from upload buttons
+            const uploadArea = document.getElementById(docType + 'Upload');
+            const primaryBtn = uploadArea.querySelector('.upload-btn.primary');
+            const secondaryBtn = uploadArea.querySelector('.upload-btn.secondary');
+            
+            primaryBtn.onclick = (e) => {
+                e.stopPropagation();
+                openCamera();
+            };
+            
+            secondaryBtn.onclick = (e) => {
+                e.stopPropagation();
+                openGallery();
+            };
+        }
+
+        function openCamera() {
+            document.getElementById('cameraInput').click();
+        }
+
+        function openGallery() {
+            document.getElementById('fileInput').click();
+        }
+
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            // Validate file
+            if (!validateFile(file)) return;
+
+            // Preview file
+            previewFile(file, currentUploadType);
+            
+            // Store file
+            uploadedFiles[currentUploadType] = file;
+            
+            // Update UI
+            updateDocumentStatus(currentUploadType, true);
+            
+            // Save to temp storage
+            saveToTempStorage();
+            
+            // Check if all required docs are uploaded
+            checkAllDocumentsUploaded();
+        }
+
+        function validateFile(file) {
+            // Check file type
+            if (!file.type.startsWith('image/')) {
+                alert('Vui lòng chọn file ảnh (JPG, PNG)');
+                return false;
+            }
+            
+            // Check file size (5MB limit)
+            if (file.size > 5 * 1024 * 1024) {
+                alert('Kích thước file không được vượt quá 5MB');
+                return false;
+            }
+            
+            return true;
+        }
+
+        function previewFile(file, docType) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const uploadArea = document.getElementById(docType + 'Upload');
+                const preview = document.getElementById(docType + 'Preview');
+                const image = document.getElementById(docType + 'Image');
+                
+                image.src = e.target.result;
+                uploadArea.classList.add('has-file');
+                preview.classList.add('show');
+                
+                // Update upload text
+                uploadArea.querySelector('.upload-text').textContent = 'Đã tải lên thành công';
+                uploadArea.querySelector('.upload-hint').textContent = 'Chạm để thay đổi ảnh';
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function removeDocument(docType) {
+            const uploadArea = document.getElementById(docType + 'Upload');
+            const preview = document.getElementById(docType + 'Preview');
+            
+            uploadArea.classList.remove('has-file');
+            preview.classList.remove('show');
+            
+            // Reset upload text
+            uploadArea.querySelector('.upload-text').textContent = getUploadText(docType);
+            uploadArea.querySelector('.upload-hint').textContent = 'Chạm để chọn ảnh hoặc chụp ảnh mới';
+            
+            // Remove from storage
+            delete uploadedFiles[docType];
+            updateDocumentStatus(docType, false);
+            saveToTempStorage();
+            checkAllDocumentsUploaded();
+        }
+
+        function getUploadText(docType) {
+            const texts = {
+                'idCard': 'Tải lên CMND/CCCD',
+                'businessLicense': 'Tải lên Giấy phép kinh doanh',
+                'authorization': 'Tải lên Giấy ủy quyền'
+            };
+            return texts[docType] || 'Tải lên giấy tờ';
+        }
+
+        function updateDocumentStatus(docType, uploaded) {
+            const status = document.getElementById(docType + 'Status');
+            if (uploaded) {
+                status.textContent = '✓ Đã tải lên';
+                status.style.color = 'var(--success)';
+            } else {
+                status.textContent = 'Bắt buộc';
+                status.style.color = 'var(--text-secondary)';
+            }
+        }
+
+        function checkAllDocumentsUploaded() {
+            let requiredDocs = ['idCard'];
+            
+            if (businessType === 'household' || businessType === 'company' || businessType === 'official') {
+                requiredDocs.push('businessLicense');
+            }
+            
+            if (businessType === 'official') {
+                requiredDocs.push('authorization');
+            }
+            
+            const allUploaded = requiredDocs.every(doc => uploadedFiles[doc]);
+            
+            if (allUploaded && !document.getElementById('otpSection').classList.contains('show')) {
+                // Show OTP section and send OTP
+                showOTPSection();
+                sendOTP();
+            }
+        }
+
+        function showOTPSection() {
+            document.getElementById('otpSection').classList.add('show');
+            document.getElementById('otpSection').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function sendOTP() {
+            // Simulate OTP sending
+            startOTPTimer();
+            alert('Mã OTP đã được gửi đến số điện thoại của bạn');
+        }
+
+        function initializeOTPInputs() {
+            const otpInputs = document.querySelectorAll('.otp-input');
+            
+            otpInputs.forEach((input, index) => {
+                input.addEventListener('input', function(e) {
+                    if (e.target.value.length === 1) {
+                        if (index < otpInputs.length - 1) {
+                            otpInputs[index + 1].focus();
+                        }
+                    }
+                    checkOTPComplete();
+                });
+                
+                input.addEventListener('keydown', function(e) {
+                    if (e.key === 'Backspace' && e.target.value === '' && index > 0) {
+                        otpInputs[index - 1].focus();
+                    }
+                });
+            });
+        }
+
+        function checkOTPComplete() {
+            const otpInputs = document.querySelectorAll('.otp-input');
+            const otp = Array.from(otpInputs).map(input => input.value).join('');
+            
+            if (otp.length === 6) {
+                // Simulate OTP verification
+                if (otp === '123456') {
+                    document.getElementById('nextBtn').disabled = false;
+                    alert('Xác thực OTP thành công!');
+                } else {
+                    alert('Mã OTP không chính xác. Vui lòng thử lại.');
+                    clearOTP();
+                }
+            }
+        }
+
+        function clearOTP() {
+            document.querySelectorAll('.otp-input').forEach(input => input.value = '');
+            document.getElementById('otp1').focus();
+        }
+
+        function startOTPTimer() {
+            otpCountdown = 120;
+            document.getElementById('resendBtn').disabled = true;
+            
+            otpTimer = setInterval(() => {
+                otpCountdown--;
+                document.getElementById('countdown').textContent = otpCountdown;
+                
+                if (otpCountdown <= 0) {
+                    clearInterval(otpTimer);
+                    document.getElementById('resendBtn').disabled = false;
+                    document.getElementById('otpTimer').innerHTML = 'Mã OTP đã hết hạn';
+                }
+            }, 1000);
+        }
+
+        function toggleAccordion(section) {
+            const content = document.getElementById(section + 'Content');
+            content.classList.toggle('show');
+        }
+
+        function viewFullImage(docType) {
+            const image = document.getElementById(docType + 'Image');
+            // Simple full-screen view
+            const fullView = window.open('', '_blank');
+            fullView.document.write(`<img src="${image.src}" style="width: 100%; height: 100vh; object-fit: contain;">`);
+        }
+
+        function saveToTempStorage() {
+            const formData = {
+                businessType: businessType,
+                uploadedDocs: Object.keys(uploadedFiles),
+                // Note: Files themselves can't be stored in localStorage
+                // In real implementation, you'd upload to temporary storage
+            };
+            localStorage.setItem('sellerOnboarding_step3', JSON.stringify(formData));
+        }
+
+        function restoreFromTempStorage() {
+            const savedData = localStorage.getItem('sellerOnboarding_step3');
+            if (savedData) {
+                const formData = JSON.parse(savedData);
+                // Restore UI state based on saved data
+                // In real implementation, you'd restore uploaded files from temporary storage
+            }
+        }
+
+        function initializeButtonHandlers() {
+            document.getElementById('backBtn').addEventListener('click', function() {
+                if (confirm('Bạn có chắc muốn quay lại? Dữ liệu đã nhập sẽ được lưu tạm thời.')) {
+                    saveToTempStorage();
+                    window.location.href = '../index.html';
+                }
+            });
+
+            document.getElementById('backStepBtn').addEventListener('click', function() {
+                saveToTempStorage();
+                window.location.href = 'PaymentWarehouseScreen.html';
+            });
+
+            document.getElementById('nextBtn').addEventListener('click', function() {
+                saveToTempStorage();
+                navigateToNextStep();
+            });
+
+            document.getElementById('resendBtn').addEventListener('click', function() {
+                sendOTP();
+            });
+        }
+
+        function navigateToNextStep() {
+            const nextBtn = document.getElementById('nextBtn');
+            const loading = document.getElementById('nextBtnLoading');
+            const btnText = document.getElementById('nextBtnText');
+
+            loading.classList.add('show');
+            btnText.style.display = 'none';
+            nextBtn.disabled = true;
+
+            setTimeout(() => {
+                window.location.href = 'ReviewSubmitScreen.html';
+            }, 1000);
+        }
+    </script>
+</body>
+</html> 
