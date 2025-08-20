@@ -1,0 +1,11 @@
+{
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "server": "localhost",
+            "driver": "PostgreSQL",
+            "name": "i-LogiCare@LTA",
+            "connectString": "postgresql://postgres:jrztqjSQymMiDtWt@db.rowpswmsgomytqrkcdlt.supabase.co:5432/postgres"
+        }
+    ]
+}
